@@ -432,7 +432,10 @@ export class EventAnalyzer {
       // cast on "Unknown Actor" in WCL. Try to infer the target first
       // look for a damage event around the time we should expect a hit for the spell
       // and infer the actual target from that instance, if found.
-      const delta = spellData.maxDuration > 0 ? (spellData.maxDuration / spellData.maxDamageInstances) * 1000 : 3000;
+      const delta = spellData.maxDuration > 0 ? (spellData.maxDuration / spellData.maxDamageInstances) * 1000 : spellData.damageType === DamageType.DIRECTAOE? 500 : 3000;
+      if(spellData.damageType == DamageType.DIRECTAOE || cast.spellId == 62078){
+        console.log(delta);
+      }
       const firstDamageTimestamp = cast.castEnd + delta + EventAnalyzer.EVENT_LEEWAY;
       const firstInstance = damageEvents.find((e) =>
         this.matchDamage(cast, spellData, e, firstDamageTimestamp, true));
@@ -479,7 +482,7 @@ export class EventAnalyzer {
         const failed = this.failed(cast.spellId, nextDamage, countForDamageId);
 
         if ((!maxForDamageId || countForDamageId < maxForDamageId) &&
-          (spellData.damageType === DamageType.AOE || countForDamageId === 0 || !failed)) {
+          (spellData.damageType === DamageType.AOE || spellData.damageType === DamageType.DIRECTAOE || countForDamageId === 0 || !failed)) {
           instances.push(new DamageInstance(nextDamage));
 
           if (instancesById.hasOwnProperty(damageId)) {
