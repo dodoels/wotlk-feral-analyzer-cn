@@ -9,6 +9,8 @@ export class DamageInstance {
   amount: number;
   absorbed: number;
   resisted: number;
+  maxHitPoints: number;
+  hitPoints: number;
 
   constructor(data: IDamageData) {
     this.timestamp = data.timestamp;
@@ -18,6 +20,8 @@ export class DamageInstance {
     this.amount = data.amount;
     this.absorbed = data.absorbed || 0;
     this.resisted = data.resisted || 0;
+    this.maxHitPoints = data.maxHitPoints;
+    this.hitPoints = data.hitPoints;
   }
 
   get totalDamage() {

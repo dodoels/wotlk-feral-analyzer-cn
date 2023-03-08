@@ -50,6 +50,7 @@
           <span class="icon" [ngClass]="iconClass(cast)"></span>
           <span class="name spell-accent" [ngClass]="{ 'no-target': !cast.targetId }">{{ cast.name }}</span>
           <span class="target"> {{ targetName(cast.targetId, cast.targetInstance) }}</span>
+          <span class="percent"> {{ percent(cast) }} </span>
         </mat-panel-title>
 
         <mat-panel-description >

@@ -50,6 +50,8 @@ export class CastDetails {
   // for DoTs, downtime between last tick and first tick of this cast
   dotDowntime?: number;
 
+  targetPercent: number;
+
   // for spells with a cooldown, delta from the point the spell was off cooldown until this cast started
   timeOffCooldown?: number;
 
@@ -121,6 +123,12 @@ export class CastDetails {
           console.log(this)
           console.log(next);
         }
+    }
+
+    if(instances.length > 0 ){
+      let percent = (instances[0].hitPoints / instances[0].maxHitPoints)*100;
+      const factor = Math.pow(10, 1);
+      this.targetPercent = Math.round(percent * factor) / factor;
     }
 
     this.totalDamage = damage + absorbed;
@@ -246,3 +254,4 @@ interface ICastDetailsParams {
   buffs: IBuffDetails[];
   CP: number;
 }
+  

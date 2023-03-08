@@ -2,7 +2,7 @@
  * WarcraftLogs API response interfaces
  */
 
-export interface IEncountersResponse {
+ export interface IEncountersResponse {
   title: string;
   owner: string;
   friendlies: IActorData[];
@@ -70,6 +70,8 @@ export interface IDamageData extends IEventData {
   absorbed?: number;
   resisted?: number;
   tick: boolean;
+  maxHitPoints: number;
+  hitPoints: number;
 }
 
 export interface IDeathData extends IEventData {

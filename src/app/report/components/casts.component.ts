@@ -183,6 +183,13 @@ export class CastsComponent implements OnInit, OnChanges, AfterViewInit {
       '---';
   }
 
+  percent(cast: CastDetails) {
+    if(cast.targetPercent){
+      return cast.targetPercent + "%";
+    }
+    return undefined;
+  }
+
   buffClass(buff: IBuffDetails) {
     return {
       [`spell-${buff.id}`]: true

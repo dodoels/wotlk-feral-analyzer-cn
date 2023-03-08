@@ -196,12 +196,20 @@ export class EventPreprocessor {
       switch (event.type) {
         case 'applybuff':
         case 'refreshbuff':
-          active[event.ability.guid] = event;
+          if(event.ability.guid != SpellId.ROAR){
+            active[event.ability.guid] = event;
+            continue;
+          }
+
+          if (active.hasOwnProperty(event.ability.guid)) {
+            delete active[event.ability.guid];
+          } else {
+            missing.push(event);
+          }
           continue;
 
-          //TODO: Verify this is correct
-
         case 'removebuff':
+          
           if (active.hasOwnProperty(event.ability.guid)) {
             delete active[event.ability.guid];
           } else {

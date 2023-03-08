@@ -16,7 +16,7 @@ import { AuraId } from 'src/app/logs/models/aura-id.enum';
 
 export class EventAnalyzer {
   public static EVENT_LEEWAY = 100; // in milliseconds. Allow damage to occur just slightly later than "should" be
-                                    // possible given strict debuff times. Blah blah server doesn't keep time exactly.
+  // possible given strict debuff times. Blah blah server doesn't keep time exactly.
 
   private static MIN_INFER_HASTE_EVENTS = 8; // require a minimum of MB/VT casts to infer missing haste value
 
@@ -27,7 +27,7 @@ export class EventAnalyzer {
   private castData: ICastData[];
   private damageData: IDamageData[];
   private deaths: IDeathLookup;
-  private damageBySpell: {[spellId: number]: IDamageData[]};
+  private damageBySpell: { [spellId: number]: IDamageData[] };
   private events: IEventData[];
 
   // tracks currently active buffs
@@ -70,8 +70,8 @@ export class EventAnalyzer {
     let event: IEventData,
       currentCast: ICastData,
       castBuffs: IBuffEvent[] = [],
-      activeStats: IHasteStats|null = null,
-      startingCast: ICastData|null = null;
+      activeStats: IHasteStats | null = null,
+      startingCast: ICastData | null = null;
 
     const casts: CastDetails[] = [];
 
@@ -79,14 +79,14 @@ export class EventAnalyzer {
     // TODO: POUNCE, RAVAGE
     const CPGenerators = [SpellId.RAKE, SpellId.MANGLE_CAT, SpellId.SHRED];
     // TODO: MAIN
-    const CPSpenders = [SpellId.RIP, SpellId.ROAR, SpellId.BITE] ;
+    const CPSpenders = [SpellId.RIP, SpellId.ROAR, SpellId.BITE];
 
 
 
     while (this.events.length > 0) {
       event = this.events.shift() as IEventData;
-      
-      
+
+
 
       switch (event.type) {
         case 'applybuff':
@@ -144,7 +144,7 @@ export class EventAnalyzer {
       //     const event = this.damageBySpell[cast.spellId].find((d) =>
       //       this.matchDamage(cast, spellData, d, cast.castEnd, true));
 
-      
+
 
       const details = new CastDetails({
         castId,
@@ -165,27 +165,26 @@ export class EventAnalyzer {
         CP: currentCP
       });
 
-      if(CPGenerators.includes(castId)){
+      if (CPGenerators.includes(castId)) {
         const event = this.damageBySpell[castId].find((d) =>
-             this.matchDamage(details, spellData, d, details.castEnd, true));
-        if(event){
-          if([HitType.CRIT, HitType.CRIT_PARTIAL_RESIST].includes(event.hitType))
-          {
+          this.matchDamage(details, spellData, d, details.castEnd, true));
+        if (event) {
+          if ([HitType.CRIT, HitType.CRIT_PARTIAL_RESIST].includes(event.hitType)) {
             currentCP += 2;
             // console.log("crit!CP+2", currentCP);
           }
-          else if(![HitType.RESIST, HitType.IMMUNE, HitType.MISS, HitType.PARRY, HitType.DODGE].includes(event.hitType)){
+          else if (![HitType.RESIST, HitType.IMMUNE, HitType.MISS, HitType.PARRY, HitType.DODGE].includes(event.hitType)) {
             currentCP++;
             // console.log("CP+1!", currentCP);
           }
         }
       }
 
-      if(CPSpenders.includes(castId)){
+      if (CPSpenders.includes(castId)) {
         const event = this.damageBySpell[castId].find((d) =>
-             this.matchDamage(details, spellData, d, details.castEnd, true));
+          this.matchDamage(details, spellData, d, details.castEnd, true));
       }
-      
+
       // console.log(details);
 
       casts.push(details);
@@ -201,19 +200,23 @@ export class EventAnalyzer {
         }
       }
 
-      if(this.events.length == 0 && this.buffs.some(x => x.id == AuraId.SAVAGE_ROAR)){
-        this.removeBuff({
-          type:"removebuff",
-          ability: {name:"Savage Roar", guid: AuraId.SAVAGE_ROAR},
-          timestamp: this.analysis.encounter.end,
-          read: true,
-          targetID: 0,
-          targetInstance: 0
-        });
-      }
 
       startingCast = activeStats = null;
     }
+
+    console.log("last event");
+    if (this.buffs.some(x => x.id == AuraId.SAVAGE_ROAR)) {
+      console.log("manually removing SR");
+      this.removeBuff({
+        type: "removebuff",
+        ability: { name: "Savage Roar", guid: AuraId.SAVAGE_ROAR },
+        timestamp: this.analysis.encounter.end,
+        read: true,
+        targetID: 0,
+        targetInstance: 0
+      });
+    }
+
 
     return casts;
   }
@@ -223,7 +226,7 @@ export class EventAnalyzer {
   // This isn't perfectly accurate, but it should be very close
   // (and this strategy is a fallback for when logs are missing data)
   private inferBaseHaste() {
-    let startingCast: ICastData|undefined,
+    let startingCast: ICastData | undefined,
       cast: ICastData,
       spellData: ISpellData,
       event: IEventData,
@@ -256,7 +259,7 @@ export class EventAnalyzer {
           if ((cast.ability.guid === SpellId.VAMPIRIC_TOUCH || cast.ability.guid === SpellId.MIND_BLAST) &&
             cast.ability.guid === startingCast?.ability?.guid) {
 
-            const castTime = (cast.timestamp - startingCast.timestamp)/1000,
+            const castTime = (cast.timestamp - startingCast.timestamp) / 1000,
               baseCastTime = spellData.baseCastTime / stats.totalHaste;
 
             if (castTime <= baseCastTime) {
@@ -273,7 +276,7 @@ export class EventAnalyzer {
       }
     }
 
-    const hastedPercent = hasteCount/castCount,
+    const hastedPercent = hasteCount / castCount,
       estimate = totalHaste / castCount;
 
     // In order to actually estimate this somewhat reasonably, we want
@@ -295,7 +298,7 @@ export class EventAnalyzer {
 
     const events: IEventData[] = [];
     let buffIndex = 0, nextBuff = this.buffData[buffIndex],
-      castIndex = 0, lastCast: ICastData|undefined = undefined, nextCast = this.castData[castIndex];
+      castIndex = 0, lastCast: ICastData | undefined = undefined, nextCast = this.castData[castIndex];
 
     do {
       if (nextBuff && (!nextCast || this.buffHasPriority(nextBuff, nextCast, lastCast))) {
@@ -338,7 +341,7 @@ export class EventAnalyzer {
       .reduce((lookup, spellId) => {
         lookup[parseInt(spellId)] = [];
         return lookup;
-      }, {} as {[spellId: number]: IDamageData[]});
+      }, {} as { [spellId: number]: IDamageData[] });
 
     for (const event of this.damageData) {
       const data = Spell.fromDamageId(mapSpellId(event.ability.guid));
@@ -355,8 +358,10 @@ export class EventAnalyzer {
       existing.event = event;
     } else {
       this.buffs.push({ id: event.ability.guid, data, event });
-      if(event.ability.guid == SpellId.ROAR){
+      if (event.ability.guid == SpellId.ROAR) {
         console.log("Detect SR cast");
+        const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
+        console.log(`${tsFormatted} :${event.timestamp} [${this.analysis.encounter.start}-${this.analysis.encounter.end}]`)
         this.lastSavageRoar = event.timestamp;
       }
     }
@@ -365,8 +370,10 @@ export class EventAnalyzer {
   private removeBuff(event: IBuffData) {
     const index = this.buffs.findIndex((b) => b.id === event.ability.guid);
     if (index >= 0) {
-      if(event.ability.guid == SpellId.ROAR){
+      if (event.ability.guid == SpellId.ROAR) {
         console.log("Detect SR fade");
+        const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
+        console.log(`${tsFormatted} :${event.timestamp} [${this.analysis.encounter.start}-${this.analysis.encounter.end}]`)
         this.savageRoarDurationTotal += (event.timestamp - this.lastSavageRoar);
       }
       this.buffs.splice(index, 1);
@@ -395,26 +402,26 @@ export class EventAnalyzer {
   // }
 
   private setDamage(cast: CastDetails, spellData: ISpellData) {
-      if (this.damageBySpell.hasOwnProperty(cast.spellId)) {
-        const event = this.damageBySpell[cast.spellId].find((d) =>
-          this.matchDamage(cast, spellData, d, cast.castEnd, true));
+    if (this.damageBySpell.hasOwnProperty(cast.spellId)) {
+      const event = this.damageBySpell[cast.spellId].find((d) =>
+        this.matchDamage(cast, spellData, d, cast.castEnd, true));
 
-        if (event) {
-          cast.targetId = event.targetID;
-          cast.setInstances([new DamageInstance((event))]);
-          event.read = true;
-          return;
-        }
+      if (event) {
+        cast.targetId = event.targetID;
+        cast.setInstances([new DamageInstance((event))]);
+        event.read = true;
+        return;
       }
+    }
   }
 
   private setMultiInstanceDamage(cast: CastDetails) {
     const spellData = Spell.get(cast.spellId, this.analysis.settings); // use base data for duration since haste can have errors
     let i = 0;
     let instances: DamageInstance[] = [];
-    let instancesById: {[id: number]: number} = {};
-    let nextCast: ICastData|null;
-    let nextDamage: IDamageData|null;
+    let instancesById: { [id: number]: number } = {};
+    let nextCast: ICastData | null;
+    let nextDamage: IDamageData | null;
     let maxDamageTimestamp = spellData.maxDuration > 0 ?
       cast.castEnd + (spellData.maxDuration * 1000) + (spellData.maxDamageInstances * EventAnalyzer.EVENT_LEEWAY) :
       this.analysis.encounter.end;
@@ -523,7 +530,7 @@ export class EventAnalyzer {
     // check for resist/immune
     const failed = events.find((e) =>
       this.failed(cast.spellId, e) && matchTarget(this.analysis, next, spellData, e) &&
-        e.timestamp > next.timestamp - 50 && e.timestamp < next.timestamp + 50
+      e.timestamp > next.timestamp - 50 && e.timestamp < next.timestamp + 50
     );
     if (failed) {
       return false;
@@ -552,10 +559,10 @@ export class EventAnalyzer {
   }
 
   private matchDamage(cast: CastDetails,
-                      spellData: ISpellData,
-                      next: IDamageData,
-                      maxTimestamp: number,
-                      allowUnknown = false) {
+    spellData: ISpellData,
+    next: IDamageData,
+    maxTimestamp: number,
+    allowUnknown = false) {
     if (next.read || !matchTarget(this.analysis, cast, spellData, next, allowUnknown)) {
       return false;
     }
