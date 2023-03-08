@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title.setTitle('WOTLK Shadow Analyzer');
+    this.title.setTitle('WOTLK Feral (Cat) Analyzer');
     this.player.valueChanges.subscribe(() => {
       this.filterEncounters();
     })

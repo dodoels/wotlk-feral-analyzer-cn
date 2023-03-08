@@ -7,6 +7,7 @@ export class EncounterSummary {
   start: number;
   end: number;
   durationSeconds: number;
+  duration: number;
   description: string;
   kill: boolean;
 
@@ -16,6 +17,7 @@ export class EncounterSummary {
     this.name = data.name;
     this.start = data.start_time;
     this.end = data.end_time;
+    this.duration = this.end - this.start;
     this.durationSeconds = Math.round((data.end_time - data.start_time) / 1000);
     this.kill = data.kill || false;
     this.description = `${data.name} (${this.durationFormatted}, ${this.status})`;

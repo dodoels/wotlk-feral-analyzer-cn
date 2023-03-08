@@ -25,6 +25,7 @@ export class PlayerAnalysis {
   public events: IEncounterEvents;
   public report: Report;
   public totalGcds: number;
+  public savageRoarDuration: number;
 
   private _rawStats: ActorStats;
   private _rawEvents: IEncounterEvents;
@@ -46,9 +47,12 @@ export class PlayerAnalysis {
     this.actor = log.getActorByRouteId(playerId) as Actor;
     this.settings = settings;
     this.actorInfo = actorInfo;
+    this.savageRoarDuration = 0;
 
     this._rawStats = actorInfo.stats;
     this._rawEvents = events;
+
+    console.log(events.buffs);
 
     this.analyze();
   }
@@ -135,8 +139,10 @@ export class PlayerAnalysis {
     }
 
     // analyze events and generate casts report
-    const casts = new EventAnalyzer(this).createCasts();
+    const eventAnalyzer = new EventAnalyzer(this);
+    const casts = eventAnalyzer.createCasts();
     this.report = new CastsAnalyzer(this, casts).run();
+    this.savageRoarDuration = eventAnalyzer.savageRoarDurationTotal;
 
     // find total possible GCDs in encounter
     this.totalGcds = new GcdAnalyzer(this).totalGcds;

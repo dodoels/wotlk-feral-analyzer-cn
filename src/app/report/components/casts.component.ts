@@ -18,7 +18,8 @@ import { StatHighlights } from 'src/app/report/analysis/stat-highlights';
 import { ParamsService, ParamType } from 'src/app/params.service';
 import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
 import * as StatUtils from 'src/app/report/models/stat-utils';
-import { IBuffDetails } from 'src/app/logs/models/buff-data';
+import { Buff, IBuffDetails } from 'src/app/logs/models/buff-data';
+import { AuraId } from 'src/app/logs/models/aura-id.enum';
 
 @Component({
   selector: 'casts',
@@ -138,6 +139,10 @@ export class CastsComponent implements OnInit, OnChanges, AfterViewInit {
     return Spell.baseData(cast.spellId).damageType === DamageType.DOT;
   }
 
+  isPredStrikesInstance(cast: CastDetails, buff: IBuffDetails){
+    return buff.id != AuraId.PREDATORY_STRIKES || cast.baseCastTime > 0;
+  }
+
   isChannel(cast: CastDetails) {
     return Spell.baseData(cast.spellId).damageType === DamageType.CHANNEL;
   }
@@ -156,11 +161,13 @@ export class CastsComponent implements OnInit, OnChanges, AfterViewInit {
 
   maxHits(cast: CastDetails) {
     const spell = Spell.baseData(cast.spellId);
+    // const spell = Spell.get(cast.spellId, this.analysis.settings);
     return [DamageType.DOT, DamageType.CHANNEL].includes(spell.damageType) && spell.maxDamageInstances > 0;
   }
 
   hits(cast: CastDetails) {
-    const spellData = Spell.baseData(cast.spellId);
+    // const spellData = Spell.baseData(cast.spellId);
+    const spellData = Spell.get(cast.spellId, this.analysis.settings);
     let hits = cast.hits.toString();
 
     if (this.maxHits(cast)) {

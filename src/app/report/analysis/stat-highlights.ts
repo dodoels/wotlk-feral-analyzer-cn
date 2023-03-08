@@ -70,6 +70,14 @@ export class StatHighlights {
   }
 
   /**
+   * Uptime
+   * @param data
+   */
+   uptime(data: number) {
+    return this.textHighlight(this.evaluator.uptime('ripUptime', data));
+  }
+
+  /**
    * DPS lost to early MF clipping
    * @param lostDps
    */

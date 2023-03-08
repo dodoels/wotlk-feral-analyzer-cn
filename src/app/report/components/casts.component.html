@@ -52,10 +52,11 @@
           <span class="target"> {{ targetName(cast.targetId, cast.targetInstance) }}</span>
         </mat-panel-title>
 
-        <mat-panel-description *ngIf="isDamage(cast)">
+        <mat-panel-description >
           <span class="buffs">
             <span class="buff" *ngFor="let buff of cast.summaryBuffs">
-              <span class="icon" [ngClass]="buffClass(buff)" [matTooltip]="buffTooltip(buff)" matTooltipClass="tooltip" [matTooltipShowDelay]="200"></span>
+              <span class="icon" *ngIf="isPredStrikesInstance(cast, buff)"
+              [ngClass]="buffClass(buff)" [matTooltip]="buffTooltip(buff)" matTooltipClass="tooltip" [matTooltipShowDelay]="200"></span>
             </span>
           </span>
           <span class="downtime" *ngIf="spellId && isDot(cast)">
@@ -73,9 +74,11 @@
             <span class="hits-label-abbrev">H: </span>
             <span [ngClass]="highlight.hits(cast)">{{ hits(cast) }}</span>
           </span>
+          <span class="power" *ngIf="cast.hasEnergy">Energy: <span class="table-accent">{{ cast.classResources? cast.classResources[0].amount : 0 }}</span></span>
+          <span class="power" *ngIf="cast.hasRage">Rage: <span class="table-accent">{{ cast.classResources? cast.classResources[0].amount / 10 : 0 }}</span></span>
           <span class="haste" *ngIf="showHaste">Haste: <span class="table-accent">{{ haste(cast) }}</span></span>
-          <span class="power" *ngIf="!showHaste">Power: <span class="table-accent">{{ cast.spellPower }}</span></span>
-          <span class="damage" *ngIf="!cast.failed">
+          <span class="power" *ngIf="!showHaste">AP: <span class="table-accent">{{ cast.spellPower }}</span></span>
+          <span [ngClass]="{'damage':true, 'vis-hidden':!isDamage(cast)}" *ngIf="!cast.failed">
             <span class="damage-label">Damage: </span>
             <span class="spell-accent" [ngClass]="{ 'crit': cast.crit }">{{ cast.totalDamage }}</span>
           </span>

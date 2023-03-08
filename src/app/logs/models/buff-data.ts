@@ -141,6 +141,21 @@ export class Buff {
       summaryIcon: true
     }),
 
+    [AuraId.OOC_CLEARCASTING]: buff({
+      trigger: BuffTrigger.EXTERNAL,
+      summaryIcon: true
+    }),
+
+    [AuraId.SAVAGE_ROAR]: buff({
+      trigger: BuffTrigger.CAST_END,
+      summaryIcon: true
+    }),
+
+    [AuraId.PREDATORY_STRIKES]: buff({
+      trigger: BuffTrigger.EXTERNAL,
+      summaryIcon: true
+    }),
+
     [AuraId.INNER_FOCUS]: buff({
       trigger: BuffTrigger.ON_USE,
       summaryIcon: true

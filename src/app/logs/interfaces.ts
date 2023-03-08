@@ -55,9 +55,11 @@ export interface IEventData {
 export interface ICastData extends IEventData {
   type: 'cast' | 'begincast';
   sourceID: number;
+  attackPower: number;
   spellPower: number;
   hitPoints: number;
   maxHitPoints: number;
+  classResources?: Array<any>;
 }
 
 export interface IDamageData extends IEventData {

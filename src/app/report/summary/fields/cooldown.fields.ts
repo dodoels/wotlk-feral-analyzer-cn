@@ -9,11 +9,11 @@ export class CooldownFields extends BaseFields {
 
     if (spellData) {
       fields = [
-        this.field({
-          label: 'Avg Delay',
-          value: latency(stats.avgNextCastLatency),
-          highlight: this.highlight.castLatency(stats)
-        }),
+        // this.field({
+        //   label: 'Avg Delay',
+        //   value: latency(stats.avgNextCastLatency),
+        //   highlight: this.highlight.castLatency(stats)
+        // }),
         this.field({
           label: 'Crit Rate',
           value: format(stats.critRate * 100, 1, '%')
@@ -25,12 +25,12 @@ export class CooldownFields extends BaseFields {
       ];
     }
 
-    fields = fields.concat([
-      this.field({
-        label: 'Avg Off Cooldown',
-        value: format(stats.cooldownStats.avgOffCooldown, 1, 's')
-      })
-    ]);
+    // fields = fields.concat([
+    //   this.field({
+    //     label: 'Avg Off Cooldown',
+    //     value: format(stats.cooldownStats.avgOffCooldown, 1, 's')
+    //   })
+    // ]);
 
     if (spellData) {
       fields = fields.concat([this.break()]);

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "shadow": {
+    "feral": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,8 +20,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "baseHref": "/shadow/",
-            "outputPath": "dist/shadow",
+            "baseHref": "/feral/",
+            "outputPath": "dist/feral",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "shadow:build:production"
+              "browserTarget": "feral:build:production"
             },
             "development": {
-              "browserTarget": "shadow:build:development"
+              "browserTarget": "feral:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "shadow:build"
+            "browserTarget": "feral:build"
           }
         },
         "test": {
@@ -113,7 +113,7 @@
       }
     }
   },
-  "defaultProject": "shadow",
+  "defaultProject": "feral",
   "cli": {
     "schematicCollections": [
       "@angular-eslint/schematics"

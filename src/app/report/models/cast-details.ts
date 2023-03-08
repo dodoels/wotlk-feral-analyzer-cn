@@ -56,6 +56,12 @@ export class CastDetails {
   // damage truncated by death of mob?
   truncated = false;
 
+  // energy or rage values attached?
+  classResources?: Array<any>;
+
+  // combo points
+  CP = 0;
+
   gcd = 0;
   haste = 0;
 
@@ -80,7 +86,9 @@ export class CastDetails {
     this.spellPower = params.spellPower;
     this.haste = params.haste;
     this.gcd = params.gcd;
+    this.classResources = params.classResources;
     this.baseCastTime = HasteUtils.castTime(this.spellId, params.haste);
+    this.CP = params.CP;
   }
 
   setInstances(instances: DamageInstance[]) {
@@ -93,6 +101,12 @@ export class CastDetails {
       resisted += next.resisted;
       targets.push(next.targetId);
 
+      if ([HitType.RESIST, HitType.IMMUNE,HitType.NONE].includes(next.hitType)) {
+        if(this.name="Shred"){
+          console.log(next);
+        }
+      }
+
       if (![HitType.RESIST, HitType.IMMUNE].includes(next.hitType)) {
         hits++;
       }
@@ -100,6 +114,13 @@ export class CastDetails {
       if ([HitType.CRIT, HitType.CRIT_PARTIAL_RESIST].includes(next.hitType)) {
         crits++;
       }
+
+      if(![HitType.BLOCK, HitType.GLANCE, HitType.DODGE, HitType.PARRY,
+        HitType.NONE,HitType.HIT,HitType.CRIT,HitType.ABSORB,HitType.IMMUNE,HitType.RESIST,HitType.PARTIAL_RESIST,HitType.CRIT_PARTIAL_RESIST].includes(next.hitType)){
+          console.log(`unknown hit type for spell ${this.name}`, next.hitType);
+          console.log(this)
+          console.log(next);
+        }
     }
 
     this.totalDamage = damage + absorbed;
@@ -119,6 +140,14 @@ export class CastDetails {
 
   get failed() {
     return [HitType.RESIST, HitType.IMMUNE].includes(this.hitType);
+  }
+
+  get hasEnergy() {
+    return this.classResources && this.classResources[0].type === 3;
+  }
+  
+  get hasRage() {
+    return this.classResources && this.classResources[0].type === 1;
   }
 
   get resisted() {
@@ -211,7 +240,9 @@ interface ICastDetailsParams {
   castStart: number;
   castEnd: number;
   spellPower: number;
+  classResources?: Array<any>;
   haste: number;
   gcd: number;
   buffs: IBuffDetails[];
+  CP: number;
 }

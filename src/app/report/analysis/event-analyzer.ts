@@ -12,6 +12,7 @@ import { LogSummary } from 'src/app/logs/models/log-summary';
 import { mapSpellId, SpellId } from 'src/app/logs/models/spell-id.enum';
 import { matchTarget } from 'src/app/report/analysis/utils';
 import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
+import { AuraId } from 'src/app/logs/models/aura-id.enum';
 
 export class EventAnalyzer {
   public static EVENT_LEEWAY = 100; // in milliseconds. Allow damage to occur just slightly later than "should" be
@@ -32,6 +33,9 @@ export class EventAnalyzer {
   // tracks currently active buffs
   private buffs: IBuffEvent[] = [];
 
+  private lastSavageRoar: number;
+  public savageRoarDurationTotal: number;
+
   constructor(analysis: PlayerAnalysis) {
     this.analysis = analysis;
     this.baseStats = Object.assign({}, analysis.actorInfo.stats) as ActorStats;
@@ -41,6 +45,7 @@ export class EventAnalyzer {
     this.castData = analysis.events.casts;
     this.damageData = analysis.events.damage;
     this.deaths = analysis.events.deaths;
+    this.savageRoarDurationTotal = 0;
 
     // partition damage events by spell ID for association with casts
     this.initializeDamageBuckets();
@@ -70,8 +75,18 @@ export class EventAnalyzer {
 
     const casts: CastDetails[] = [];
 
+    let currentCP = 0;
+    // TODO: POUNCE, RAVAGE
+    const CPGenerators = [SpellId.RAKE, SpellId.MANGLE_CAT, SpellId.SHRED];
+    // TODO: MAIN
+    const CPSpenders = [SpellId.RIP, SpellId.ROAR, SpellId.BITE] ;
+
+
+
     while (this.events.length > 0) {
       event = this.events.shift() as IEventData;
+      
+      
 
       switch (event.type) {
         case 'applybuff':
@@ -119,7 +134,18 @@ export class EventAnalyzer {
         castBuffs = this.buffs.slice();
       }
 
+
       const spellData = Spell.get(castId, this.analysis.settings, activeStats.totalHaste - 1);
+      // console.log("currentCast", currentCast);
+      // console.log("spellData", spellData);
+
+      // private setDamage(cast: CastDetails, spellData: ISpellData) {
+      //   if (this.damageBySpell.hasOwnProperty(cast.spellId)) {
+      //     const event = this.damageBySpell[cast.spellId].find((d) =>
+      //       this.matchDamage(cast, spellData, d, cast.castEnd, true));
+
+      
+
       const details = new CastDetails({
         castId,
         spellId: spellData.mainId,
@@ -132,20 +158,39 @@ export class EventAnalyzer {
         castStart: startingCast?.timestamp || currentCast.timestamp,
         castEnd: currentCast.timestamp,
         buffs: castBuffs.map((b) => b.data),
-        spellPower: currentCast.spellPower,
+        spellPower: currentCast.attackPower,
         haste: activeStats!.totalHaste - 1,
-        gcd: spellData.gcd ? activeStats!.gcd : 0
+        gcd: spellData.gcd ? activeStats!.gcd : 0,
+        classResources: currentCast.classResources,
+        CP: currentCP
       });
-      casts.push(details);
 
-      // special case -- ShadowFiend!
-      // there's probably a way to generalize this but I'm not sure it's even worth it
-      // unless I were to want to re-use this code for non-shadow-priest analysis
-      if (details.spellId === SpellId.SHADOW_FIEND) {
-        this.setShadowfiendDamage(details);
+      if(CPGenerators.includes(castId)){
+        const event = this.damageBySpell[castId].find((d) =>
+             this.matchDamage(details, spellData, d, details.castEnd, true));
+        if(event){
+          if([HitType.CRIT, HitType.CRIT_PARTIAL_RESIST].includes(event.hitType))
+          {
+            currentCP += 2;
+            // console.log("crit!CP+2", currentCP);
+          }
+          else if(![HitType.RESIST, HitType.IMMUNE, HitType.MISS, HitType.PARRY, HitType.DODGE].includes(event.hitType)){
+            currentCP++;
+            // console.log("CP+1!", currentCP);
+          }
+        }
       }
 
-      else if (spellData.damageType !== DamageType.NONE) {
+      if(CPSpenders.includes(castId)){
+        const event = this.damageBySpell[castId].find((d) =>
+             this.matchDamage(details, spellData, d, details.castEnd, true));
+      }
+      
+      // console.log(details);
+
+      casts.push(details);
+
+      if (spellData.damageType !== DamageType.NONE) {
         if (spellData.damageType === DamageType.DIRECT) {
           this.setDamage(details, spellData);
         } else {
@@ -154,6 +199,17 @@ export class EventAnalyzer {
           // check for lost ticks to enemy death
           this.setTruncationByDeath(details, spellData);
         }
+      }
+
+      if(this.events.length == 0 && this.buffs.some(x => x.id == AuraId.SAVAGE_ROAR)){
+        this.removeBuff({
+          type:"removebuff",
+          ability: {name:"Savage Roar", guid: AuraId.SAVAGE_ROAR},
+          timestamp: this.analysis.encounter.end,
+          read: true,
+          targetID: 0,
+          targetInstance: 0
+        });
       }
 
       startingCast = activeStats = null;
@@ -299,36 +355,44 @@ export class EventAnalyzer {
       existing.event = event;
     } else {
       this.buffs.push({ id: event.ability.guid, data, event });
+      if(event.ability.guid == SpellId.ROAR){
+        console.log("Detect SR cast");
+        this.lastSavageRoar = event.timestamp;
+      }
     }
   }
 
   private removeBuff(event: IBuffData) {
     const index = this.buffs.findIndex((b) => b.id === event.ability.guid);
     if (index >= 0) {
+      if(event.ability.guid == SpellId.ROAR){
+        console.log("Detect SR fade");
+        this.savageRoarDurationTotal += (event.timestamp - this.lastSavageRoar);
+      }
       this.buffs.splice(index, 1);
     }
   }
 
-  private setShadowfiendDamage(cast: CastDetails) {
-    const damageEvents = this.damageBySpell[SpellId.MELEE];
-    const maxDamageTimestamp =
-      cast.castEnd + (Spell.data[SpellId.SHADOW_FIEND].maxDuration * (1000 + EventAnalyzer.EVENT_LEEWAY));
+  // private setShadowfiendDamage(cast: CastDetails) {
+  //   const damageEvents = this.damageBySpell[SpellId.MELEE];
+  //   const maxDamageTimestamp =
+  //     cast.castEnd + (Spell.data[SpellId.SHADOW_FIEND].maxDuration * (1000 + EventAnalyzer.EVENT_LEEWAY));
 
-    let nextDamage = damageEvents[0];
-    let i = 0, instances: DamageInstance[] = [];
+  //   let nextDamage = damageEvents[0];
+  //   let i = 0, instances: DamageInstance[] = [];
 
-    while (nextDamage && nextDamage.timestamp <= maxDamageTimestamp) {
-      const actor = this.analysis.getActor(cast.sourceId);
-      if (actor && !nextDamage.read && nextDamage.sourceID === actor.shadowFiendId) {
-        instances.push(new DamageInstance(nextDamage));
-        nextDamage.read = true;
-      }
+  //   while (nextDamage && nextDamage.timestamp <= maxDamageTimestamp) {
+  //     const actor = this.analysis.getActor(cast.sourceId);
+  //     if (actor && !nextDamage.read && nextDamage.sourceID === actor.shadowFiendId) {
+  //       instances.push(new DamageInstance(nextDamage));
+  //       nextDamage.read = true;
+  //     }
 
-      nextDamage = damageEvents[++i];
-    }
+  //     nextDamage = damageEvents[++i];
+  //   }
 
-    cast.setInstances(instances);
-  }
+  //   cast.setInstances(instances);
+  // }
 
   private setDamage(cast: CastDetails, spellData: ISpellData) {
       if (this.damageBySpell.hasOwnProperty(cast.spellId)) {
@@ -345,7 +409,7 @@ export class EventAnalyzer {
   }
 
   private setMultiInstanceDamage(cast: CastDetails) {
-    const spellData = Spell.dataBySpellId[cast.spellId]; // use base data for duration since haste can have errors
+    const spellData = Spell.get(cast.spellId, this.analysis.settings); // use base data for duration since haste can have errors
     let i = 0;
     let instances: DamageInstance[] = [];
     let instancesById: {[id: number]: number} = {};

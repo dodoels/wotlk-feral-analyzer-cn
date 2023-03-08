@@ -28,6 +28,9 @@ export class GcdAnalyzer {
     this.baseStats = Object.assign({}, this.analysis.actorInfo.stats);
     this.stats = HasteUtils.calc(this.baseStats);
 
+    
+    console.log(this.events);
+
     if (this.events.length === 0) {
       const duration = (this.analysis.encounter.end - this.analysis.encounter.start)/1000;
       return duration / this.stats.gcd;

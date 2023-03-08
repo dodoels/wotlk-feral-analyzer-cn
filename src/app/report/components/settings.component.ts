@@ -58,6 +58,11 @@ export class SettingsComponent implements OnInit {
         hasteRating: new FormControl(this.logHasteRating),
         improvedMindBlast: new FormControl(analysis.settings.improvedMindBlast, { nonNullable: true }),
         improvedMoonkinAura: new FormControl(analysis.settings.improvedMoonkinAura, { nonNullable: true }),
+        tier7_2p: new FormControl(analysis.settings.tier7_2p, { nonNullable: true }),
+        tier8_4p: new FormControl(analysis.settings.tier8_4p, { nonNullable: true }),
+        ripGlyphActive: new FormControl(analysis.settings.ripGlyphActive, { nonNullable: true }),
+        shredGlyphActive: new FormControl(analysis.settings.shredGlyphActive, { nonNullable: true }),
+        showMelees: new FormControl(analysis.settings.showMelees, { nonNullable: true }),
         improvedRetAura: new FormControl(analysis.settings.improvedRetAura, { nonNullable: true }),
         wrathOfAir: new FormControl(analysis.settings.wrathOfAir, { nonNullable: true }),
         moonkinAura: new FormControl(this.auraState(AuraId.MOONKIN_AURA), { nonNullable: true })
@@ -113,6 +118,11 @@ interface ISettingsForm {
   hasteRating: FormControl<number|null>;
   improvedMindBlast: FormControl<number>;
   improvedMoonkinAura: FormControl<boolean>;
+  shredGlyphActive: FormControl<boolean>;
+  ripGlyphActive: FormControl<boolean>;
+  showMelees: FormControl<boolean>;
+  tier7_2p: FormControl<boolean>;
+  tier8_4p: FormControl<boolean>;
   improvedRetAura: FormControl<boolean>;
   wrathOfAir: FormControl<boolean>;
   moonkinAura: FormControl<boolean>;

@@ -80,6 +80,14 @@ export class StatEvaluator {
         [Status.WARNING]: 50,
         [Status.NOTICE]: 20
       }
+    },
+
+    // Rip Uptime
+    ripUptime: {
+      levels: {
+        [Status.NOTICE]: 90,
+        [Status.WARNING]: 80
+      }
     }
   };
 
@@ -149,6 +157,10 @@ export class StatEvaluator {
     return this.threshold(statName, dotDowntime);
   }
 
+  uptime(statName: string, dotDowntime: number|undefined): Status {
+    return this.thresholdReverse(statName, dotDowntime);
+  }
+
   earlyClips(data: CastDetails|CastStats): Status {
     if (data instanceof CastStats) {
       return this.threshold('clippedEarlyPercent', data.channelStats.clippedEarlyPercent);
@@ -184,6 +196,20 @@ export class StatEvaluator {
     return Status.NORMAL;
   }
 
+  thresholdReverse(statName: string, value: number|undefined): Status {
+    value = value || 0;
+
+    if (this.belowThreshold(statName, value, Status.WARNING)) {
+      return Status.WARNING;
+    }
+
+    if (this.belowThreshold(statName, value, Status.NOTICE)) {
+      return Status.NOTICE;
+    }
+
+    return Status.NORMAL;
+  }
+
   private checkThresholds(cast: CastDetails, level: Status): boolean {
     for (const statName of Object.keys(StatEvaluator.thresholds)) {
       const stat = this.castValue(cast, statName);
@@ -209,6 +235,10 @@ export class StatEvaluator {
 
   private aboveThreshold(statName: string, value: number|undefined, level: Status) {
     return value !== undefined && value > StatEvaluator.thresholds[statName].levels[level];
+  }
+
+  private belowThreshold(statName: string, value: number|undefined, level: Status) {
+    return value !== undefined && value < StatEvaluator.thresholds[statName].levels[level];
   }
 }
 

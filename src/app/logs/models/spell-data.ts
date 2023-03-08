@@ -57,7 +57,7 @@ export class Spell {
     return data.rankIds[id];
   }
 
-  public static fromDamageId(id: number): ISpellData|undefined {
+  public static fromDamageId(id: number): ISpellData | undefined {
     if (this.dataBySpellId.hasOwnProperty(id)) {
       return this.dataBySpellId[id];
     }
@@ -65,8 +65,8 @@ export class Spell {
     return Object.values(this.data).find((spell) => spell.damageIds.includes(id));
   }
 
-  public static data: {[spellId: number]: ISpellData} = {
-    [SpellId.ADAMANTITE_GRENDADE]: data({
+  public static data: { [spellId: number]: ISpellData } = {
+    [SpellId.ADAMANTITE_GRENADE]: data({
       damageType: DamageType.AOE,
       baseCastTime: 1,
       maxDamageInstances: 20,
@@ -76,18 +76,6 @@ export class Spell {
     [SpellId.BERSERKING]: data({
       damageType: DamageType.NONE,
       gcd: false
-    }),
-
-    [SpellId.DEATH]: data({
-      rankIds: {
-        [32379]: 1,
-        [32996]: 2,
-        [48157]: 3
-      },
-      maxRank: 4,
-      damageType: DamageType.DIRECT,
-      maxDamageInstances: 1,
-      cooldown: 12
     }),
 
     [SpellId.DENSE_DYNAMITE]: data({
@@ -117,30 +105,48 @@ export class Spell {
       }
     }),
 
+    [SpellId.RIP]: data({
+      rankIds: {
+        [9896]: 6,
+        [27008]: 7,
+        [49799]: 8
+      },
+      maxRank: 9,
+      damageType: DamageType.DOT,
+      maxDamageInstances: 6,
+      maxDuration: 12,
+      maxTicks: 6,
+      baseTickTime: 2,
+      dynamic: (baseData, settings) => ({
+        maxDuration: baseData.maxDuration + 
+          (settings.tier7_2p ? 4 : 0) + (settings.shredGlyphActive ? 6 : 0) + (settings.ripGlyphActive ? 4 : 0),
+        maxDamageInstances: baseData.maxDamageInstances + 
+          (settings.tier7_2p ? 2 : 0) + (settings.shredGlyphActive ? 3 : 0) + (settings.ripGlyphActive ? 2 : 0),
+        maxTicks: baseData.maxTicks + 
+          (settings.tier7_2p ? 2 : 0) + (settings.shredGlyphActive ? 3 : 0) + (settings.ripGlyphActive ? 2 : 0),
+      })
+    }),
+
     [SpellId.DISPEL_MAGIC]: data({
       damageType: DamageType.NONE
     }),
 
-    [SpellId.DISPERSION]: data({
+    [SpellId.NATURES_GRASP]: data({
+      damageType: DamageType.NONE
+    }),
+
+    [SpellId.FAERIE_FIRE_FERAL]: data({
+      damageType: DamageType.NONE
+    }),
+
+    [SpellId.FAERIE_FIRE]: data({
+      damageType: DamageType.NONE
+    }),
+
+    [SpellId.REBIRTH]: data({
       damageType: DamageType.NONE,
+      baseCastTime: 2,
       gcd: true
-    }),
-
-    [SpellId.DIVINE_HYMN]: data({
-      damageType: DamageType.NONE,
-      gcd: true
-    }),
-
-    [SpellId.FADE]: data({
-      damageType: DamageType.NONE,
-      maxDuration: 10,
-      cooldown: 30
-    }),
-
-    [SpellId.FEAR_WARD]: data({
-      damageType: DamageType.NONE,
-      maxDuration: 180,
-      cooldown: 180
     }),
 
     [SpellId.FEL_IRON_BOMB]: data({
@@ -156,106 +162,115 @@ export class Spell {
       gcd: false
     }),
 
-    [SpellId.HOLY_NOVA]: data({
-      damageType: DamageType.AOE,
-      rankIds: {
-        [27801]: 6,
-        [25331]: 7,
-        [48077]: 8
-      },
-      maxRank: 9,
-      maxDamageInstances: 20,
-      gcd: true,
-    }),
-
-    [SpellId.HYMN_OF_HOPE]: data({
-      damageType: DamageType.NONE,
-      gcd: true
-    }),
-
-    [SpellId.MASS_DISPEL]: data({
-      damageType: DamageType.NONE
-    }),
-
     [SpellId.MELEE]: data({
       damageType: DamageType.DIRECT,
       gcd: false
     }),
 
-    [SpellId.MIND_BLAST]: data({
+    [SpellId.MAUL]: data({
       rankIds: {
-        [25372]: 10,
-        [25375]: 11,
-        [48126]: 12
+        [9881]: 7,
+        [26996]: 8,
+        [48479]: 9
       },
-      maxRank: 13,
+      maxRank: 10,
       damageType: DamageType.DIRECT,
-      baseCastTime: 1.5,
       maxDamageInstances: 1,
-      cooldown: 8,
-      dynamic: (baseData, settings) => ({
-        cooldown: baseData.cooldown - (0.5 * settings.improvedMindBlast)
-      })
+      gcd: false
     }),
 
-    [SpellId.MIND_FLAY]: data({
+    [SpellId.SHRED]: data({
       rankIds: {
-        [18807]: 6,
-        [25387]: 7,
-        [48155]: 8
+        [27001]: 6,
+        [27002]: 7,
+        [48571]: 8
       },
       maxRank: 9,
-      damageIds: [SpellId.MIND_FLAY_TICK],
-      damageType: DamageType.CHANNEL,
-      maxDamageInstances: 3,
-      maxDuration: 3,
-      maxTicks: 3,
-      baseTickTime: 1,
-      statsByTick: true
+      damageType: DamageType.DIRECT,
+      maxDamageInstances: 1,
     }),
 
-    [SpellId.MIND_SEAR]: data({
+    [SpellId.BITE]: data({
       rankIds: {
-        [48045]: 1
+        [31018]: 5,
+        [24248]: 6,
+        [48576]: 7
       },
-      maxRank: 2,
-      damageIds: [SpellId.MIND_SEAR_TICK],
-      damageType: DamageType.CHANNEL,
-      maxDamageInstances: 0,
-      maxDuration: 5,
-      maxTicks: 5,
-      baseTickTime: 1,
-      multiTarget: true,
+      maxRank: 8,
+      damageType: DamageType.DIRECT,
+      maxDamageInstances: 1,
     }),
 
-    [SpellId.PAIN]: data({
+    [SpellId.MANGLE_CAT]: data({
       rankIds: {
-        [25367]: 9,
-        [25368]: 10,
-        [48124]: 11
+        [33982]: 2,
+        [33983]: 3,
+        [48565]: 4
       },
-      maxRank: 12,
+      maxRank: 5,
+      damageType: DamageType.DIRECT,
+      maxDamageInstances: 1,
+    }),
+
+    [SpellId.MANGLE_BEAR]: data({
+      rankIds: {
+        [33986]: 2,
+        [33987]: 3,
+        [48563]: 4
+      },
+      maxRank: 5,
+      damageType: DamageType.DIRECT,
+      maxDamageInstances: 1,
+    }),
+
+    [SpellId.ROAR]: data({
+      maxRank: 1,
+      damageType: DamageType.NONE,
+    }),
+
+    [SpellId.TIGERS_FURY]: data({
+      rankIds: {
+        [9845]: 3,
+        [9846]: 4,
+        [50212]: 5
+      },
+      maxRank: 6,
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    [SpellId.ENRAGE]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    [SpellId.FERAL_BERSERK]: data({
+      damageType: DamageType.NONE,
+    }),
+
+    [SpellId.INNERVATE]: data({
+      damageType: DamageType.NONE,
+    }),
+
+    [SpellId.GOTW]: data({
+      rankIds: {
+        [21849]: 1,
+        [21850]: 2,
+        [26991]: 3
+      },
+      maxRank: 4,
+      damageType: DamageType.NONE,
+    }),
+
+    [SpellId.LACERATE]: data({
+      rankIds: {
+        [33745]: 1,
+        [48567]: 2
+      },
+      maxRank: 3,
       damageType: DamageType.DOT,
       baseTickTime: 3,
       dotHaste: false
-    }),
-
-    [SpellId.SHADOW_FIEND]: data({
-      damageType: DamageType.DIRECT,
-      maxDuration: 15,
-      cooldown: 180
-    }),
-
-    [SpellId.SHIELD]: data({
-      rankIds: {
-        [25217]: 11,
-        [25218]: 12,
-        [48065]: 13
-      },
-      maxRank: 14,
-      damageType: DamageType.NONE,
-      maxDuration: 30,
-      cooldown: 4
     }),
 
     [SpellId.SUPER_SAPPER]: data({
@@ -264,28 +279,31 @@ export class Spell {
       gcd: false
     }),
 
-    [SpellId.VAMPIRIC_EMBRACE]: data({
+    [SpellId.DIRE_BEAR_FORM]: data({
       damageType: DamageType.NONE
     }),
 
-    [SpellId.VAMPIRIC_TOUCH]: data({
-      rankIds: {
-        [34916]: 2,
-        [34917]: 3,
-        [48159]: 4
-      },
-      maxRank: 5,
+    [SpellId.CAT_FORM]: data({
+      damageType: DamageType.NONE
+    }),
+
+    [SpellId.RAKE]: data({
       damageType: DamageType.DOT,
-      dotHaste: true,
-      baseCastTime: 1.5,
-      maxDamageInstances: 5,
-      maxDuration: 15,
-      maxTicks: 5,
+      rankIds: {
+        [9904]: 4,
+        [27003]: 5,
+        [48573]: 6
+      },
+      maxRank: 7,
+      dotHaste: false,
+      maxDamageInstances: 4,
+      maxDuration: 9,
+      maxTicks: 3,
       baseTickTime: 3
     })
   }
 
-  public static dataBySpellId: {[spellId: number]: ISpellData} =
+  public static dataBySpellId: { [spellId: number]: ISpellData } =
     Object.keys(Spell.data).reduce((lookup, next) => {
       const spellId = parseInt(next),
         data: ISpellData = Spell.data[spellId];
@@ -298,14 +316,14 @@ export class Spell {
       }
 
       return lookup;
-    }, {} as {[spellId: number]: ISpellData});
+    }, {} as { [spellId: number]: ISpellData });
 }
 
 export interface ISpellData {
   mainId: number;
   damageType: DamageType;
-  rankIds: {[id: number]: number };
-  maxRank: number|undefined;
+  rankIds: { [id: number]: number };
+  maxRank: number | undefined;
   damageIds: number[]
   baseCastTime: number;
   maxDamageInstances: number;
@@ -317,6 +335,6 @@ export interface ISpellData {
   dotHaste: boolean;
   statsByTick: boolean;
   multiTarget: boolean;
-  maxInstancesPerDamageId?: {[id: number]: number};
+  maxInstancesPerDamageId?: { [id: number]: number };
   dynamic?: (baseData: ISpellData, settings: ISettings) => Partial<ISpellData>
 }

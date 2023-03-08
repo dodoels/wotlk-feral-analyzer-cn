@@ -7,6 +7,7 @@ import { PainSummary } from 'src/app/report/summary/pain.summary';
 import { MindFlaySummary } from 'src/app/report/summary/mind-flay.summary';
 import { DeathSummary } from 'src/app/report/summary/death.summary';
 import { MindBlastSummary } from 'src/app/report/summary/mind-blast.summary';
+import { SavageRoarSummary } from '../summary/savage-roar.summary';
 
 export enum Tab {
   Timeline = 0,
@@ -15,7 +16,9 @@ export enum Tab {
   SWP,
   MB,
   Death,
-  Flay
+  Flay,
+  Rip,
+  SR
 }
 
 export const TabDefinitions: ITabDefinition[] = [
@@ -26,53 +29,21 @@ export const TabDefinitions: ITabDefinition[] = [
     summaryType: TimelineSummary
   },
 
-  // Tab.DP
+  // Tab.Rip
   {
-    label: 'DP',
-    icon: 'dp',
-    spellId: SpellId.DEVOURING_PLAGUE,
+    label: 'Rip',
+    icon: 'rip',
+    spellId: SpellId.RIP,
     summaryType: DevouringPlagueSummary
   },
 
-  // Tab.VT
+  // Tab.Roar
   {
-    label: 'VT',
-    icon: 'vt',
-    spellId: SpellId.VAMPIRIC_TOUCH,
-    summaryType: VampiricTouchSummary
+    label: 'Savage Roar',
+    icon: 'savage-roar',
+    spellId: SpellId.ROAR,
+    summaryType: SavageRoarSummary
   },
-
-  // Tab.SWP
-  {
-    label: 'SW:P',
-    icon: 'swp',
-    spellId: SpellId.PAIN,
-    summaryType: PainSummary
-  },
-
-  // Tab.MB
-  {
-    label: 'MB',
-    icon: 'mb',
-    spellId: SpellId.MIND_BLAST,
-    summaryType: MindBlastSummary
-  },
-
-  // Tab.Death
-  {
-    label: 'SW:D',
-    icon: 'swd',
-    spellId: SpellId.DEATH,
-    summaryType: DeathSummary
-  },
-
-  // Tab.Flay
-  {
-    label: 'MF',
-    icon: 'flay',
-    spellId: SpellId.MIND_FLAY,
-    summaryType: MindFlaySummary
-  }
 ];
 
 export interface ITabDefinition {

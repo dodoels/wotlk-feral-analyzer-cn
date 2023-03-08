@@ -1,7 +1,7 @@
 import { Actor } from 'src/app/logs/models/actor';
 import { IEncounterEvents } from 'src/app/logs/logs.service';
 import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
-import { mapSpellId } from 'src/app/logs/models/spell-id.enum';
+import { mapSpellId, SpellId } from 'src/app/logs/models/spell-id.enum';
 import { DamageType, Spell } from 'src/app/logs/models/spell-data';
 import { IBuffData, IDamageData } from 'src/app/logs/interfaces';
 import { EventAnalyzer } from 'src/app/report/analysis/event-analyzer';
@@ -56,6 +56,8 @@ export class EventPreprocessor {
     const casts = this.inputEvents.casts.slice();
     const spellIdsInferred: number[] = [];
 
+    // console.log(casts.slice());
+
     let instancesToCheck = this.damage.length >= EventPreprocessor.INFER_CASTS_EVENT_COUNT ?
       EventPreprocessor.INFER_CASTS_EVENT_COUNT - 1 :
       this.damage.length - 1;
@@ -87,7 +89,8 @@ export class EventPreprocessor {
         castSpell = Spell.baseData(mapSpellId(nextCast.ability.guid));
       } while (nextCast && nextCast.timestamp < instance.timestamp + EventAnalyzer.EVENT_LEEWAY);
 
-      if (!match && !spellIdsInferred.includes(instance.ability.guid)) {
+      if (!match && !spellIdsInferred.includes(instance.ability.guid) && instance.ability.guid != 1) {
+        // console.log('added cast', instance);
         casts.unshift({
           type: 'cast',
           ability: instance.ability,
@@ -98,13 +101,35 @@ export class EventPreprocessor {
           hitPoints: 100,
           maxHitPoints: 100,
           read: false,
+          attackPower: firstDamageCast?.spellPower || 0,
           spellPower: firstDamageCast?.spellPower || 0 // we really have no idea, but it should be close to this
         });
         spellIdsInferred.push(instance.ability.guid);
       }
     }
 
-    return casts;
+    if (this.analysis.settings.showMelees) {
+      for (let i = 0; i < this.damage.length; i++) {
+        const instance = this.damage[i];
+        if (instance.ability.guid === SpellId.MELEE) {
+          casts.unshift({
+            type: 'cast',
+            ability: instance.ability,
+            timestamp: instance.timestamp,
+            sourceID: instance.sourceID,
+            targetID: instance.targetID,
+            targetInstance: instance.targetInstance,
+            hitPoints: 100,
+            maxHitPoints: 100,
+            read: false,
+            attackPower: firstDamageCast?.attackPower || 0,
+            spellPower: firstDamageCast?.attackPower || 0 // we really have no idea, but it should be close to this
+          });
+        }
+      }
+    }
+
+    return casts.sort((a, b) => a.timestamp - b.timestamp);
   }
 
   private inferCastTimestamp(damage: IDamageData) {
@@ -162,7 +187,7 @@ export class EventPreprocessor {
     buffs.push(... this.inputEvents.debuffs.slice());
     buffs.sort((a, b) => a.timestamp - b.timestamp);
 
-    const active: {[id: number]: IBuffData} = {};
+    const active: { [id: number]: IBuffData } = {};
     const missing: IBuffData[] = [];
 
     // find buffs applied before combat (remove event, but no apply event)
@@ -173,6 +198,8 @@ export class EventPreprocessor {
         case 'refreshbuff':
           active[event.ability.guid] = event;
           continue;
+
+          //TODO: Verify this is correct
 
         case 'removebuff':
           if (active.hasOwnProperty(event.ability.guid)) {

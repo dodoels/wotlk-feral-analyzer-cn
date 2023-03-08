@@ -7,17 +7,25 @@ export class DotFields extends BaseFields {
     const spellData = this.spellData(stats);
     let fields: IStatField[] = [];
 
-    if (spellData) {
-      fields = [this.field({
-        label: 'Avg Delay',
-        value: latency(stats.avgNextCastLatency),
-        highlight: this.highlight.castLatency(stats)
-      })];
-    }
+    // if (spellData) {
+    //   fields = [this.field({
+    //     label: 'Avg Delay',
+    //     value: latency(stats.avgNextCastLatency),
+    //     highlight: this.highlight.castLatency(stats)
+    //   })];
+    // }
 
     return fields
       .concat(this.downtimeStats(stats))
       .concat(this.clipStats(stats));
+  }
+
+  private avgDelay(stats: CastStats): IStatField[] {
+    return [this.field({
+      label: 'Avg Delay',
+      value: latency(stats.avgNextCastLatency),
+      highlight: this.highlight.castLatency(stats)
+    })];
   }
 
   private downtimeStats(stats: CastStats): IStatField[] {

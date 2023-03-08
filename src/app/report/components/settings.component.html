@@ -4,8 +4,17 @@
   </div>
 
   <form [formGroup]="form" (ngSubmit)="apply($event)">
+    
+    <div class="slide-toggle">
+      <mat-slide-toggle color="primary" formControlName="showMelees">Show Melee attacks</mat-slide-toggle>
+      <p class="mat-hint table-accent">Shows melee attacks.</p>
+    </div>
+
     <h4>Player Info</h4>
     <div>
+
+      
+
       <mat-form-field class="fill" appearance="standard">
         <mat-label>Gear Haste Rating</mat-label>
         <input type="number" formControlName="hasteRating" matInput [min]="0" [max]="2000"/>
@@ -23,17 +32,25 @@
       </mat-form-field>
     </div>
 
-    <div>
-      <mat-form-field class="fill" appearance="standard">
-        <mat-label>Improved Mind Blast Points</mat-label>
-        <input type="number" formControlName="improvedMindBlast" matInput [min]="0" [max]="5" />
-        <mat-hint class="table-accent" *ngIf="form.controls.improvedMindBlast.valid">
-          How many talent points in Improved Mind Blast? (0-5)
-        </mat-hint>
-        <mat-error *ngIf="form.controls.improvedMindBlast.invalid">
-          Enter a value between 0 and 5.
-        </mat-error>
-      </mat-form-field>
+    <div class="slide-toggle">
+      <mat-slide-toggle color="primary" formControlName="tier7_2p">Feral Tier 7 2-piece bonus</mat-slide-toggle>
+      <p class="mat-hint table-accent">Rip lasts an additional 4 seconds.</p>
+    </div>
+    
+  <div class="slide-toggle">
+    <mat-slide-toggle color="primary" formControlName="tier8_4p">Feral Tier 8 4-piece bonus</mat-slide-toggle>
+    <p class="mat-hint table-accent">Savage Roar lasts an additional 8 seconds.</p>
+  </div>
+
+    <h4>Glyphs</h4>
+    <div class="slide-toggle">
+      <mat-slide-toggle color="primary" formControlName="ripGlyphActive">Glyph of Rip</mat-slide-toggle>
+      <p class="mat-hint table-accent">Increases the duration of Rip by 4 seconds.</p>
+    </div>
+    
+    <div class="slide-toggle">
+      <mat-slide-toggle color="primary" formControlName="shredGlyphActive">Glyph of Shred</mat-slide-toggle>
+      <p class="mat-hint table-accent">Extends the duration of your Rip on the target by 2 seconds for each shred, up to a maximum of 6 sec.</p>
     </div>
 
     <h4>Auras</h4>
