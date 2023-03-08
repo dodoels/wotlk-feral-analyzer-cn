@@ -9,6 +9,7 @@ import { matchTarget } from 'src/app/report/analysis/utils';
 import { Buff } from 'src/app/logs/models/buff-data';
 
 import * as wcl from 'src/app/logs/interfaces';
+import { AuraId } from 'src/app/logs/models/aura-id.enum';
 
 export class EventPreprocessor {
   private analysis: PlayerAnalysis;
@@ -193,23 +194,21 @@ export class EventPreprocessor {
     // find buffs applied before combat (remove event, but no apply event)
     // and add them at the beginning of the fight
     for (const event of buffs) {
+      
       switch (event.type) {
         case 'applybuff':
-        case 'refreshbuff':
-          if(event.ability.guid != SpellId.ROAR){
             active[event.ability.guid] = event;
             continue;
-          }
-
-          if (active.hasOwnProperty(event.ability.guid)) {
-            delete active[event.ability.guid];
-          } else {
+        case 'refreshbuff':
+          if (!active.hasOwnProperty(event.ability.guid)) {
             missing.push(event);
           }
           continue;
 
         case 'removebuff':
-          
+          if(event.ability.guid == AuraId.OOC_CLEARCASTING){
+            console.log("OOC removed");
+          }
           if (active.hasOwnProperty(event.ability.guid)) {
             delete active[event.ability.guid];
           } else {

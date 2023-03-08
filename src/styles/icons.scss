@@ -6,7 +6,7 @@
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  border-radius: 5px;
+  border-radius: 3px;
 
   // VT
   &.spell-48160, &.spell-vt {
@@ -104,6 +104,14 @@
 
   &.spell-49803, &.spell-pounce {
     background-image: url('/feral/assets/pounce.jpg');
+  }
+
+  &.spell-49802, &.spell-maim {
+    background-image: url('/feral/assets/maim.jpg');
+  }
+
+  &.spell-48579, &.spell-ravage {
+    background-image: url('/feral/assets/ravage.jpg');
   }
 
   /**

@@ -313,9 +313,26 @@ export class Spell {
       baseTickTime: 3,
       damageIds: [SpellId.POUNCE_BLEED]
     }),
-  }
 
-  
+    [SpellId.MAIM]: data({
+      damageType: DamageType.DIRECT,
+      rankIds: {
+        [22570]: 1
+      },
+      maxRank: 2,
+    }),
+
+    [SpellId.RAVAGE]: data({
+      damageType: DamageType.DIRECT,
+      rankIds: {
+        [9867]: 4,
+        [27005]: 5,
+        [48578]: 6
+      },
+      maxRank: 7,
+    }),
+
+  }
 
   public static dataBySpellId: { [spellId: number]: ISpellData } =
     Object.keys(Spell.data).reduce((lookup, next) => {
