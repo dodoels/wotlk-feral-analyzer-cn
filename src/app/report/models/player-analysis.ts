@@ -52,8 +52,6 @@ export class PlayerAnalysis {
     this._rawStats = actorInfo.stats;
     this._rawEvents = events;
 
-    console.log(events.buffs);
-
     this.analyze();
   }
 

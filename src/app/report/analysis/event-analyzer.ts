@@ -139,13 +139,6 @@ export class EventAnalyzer {
       // console.log("currentCast", currentCast);
       // console.log("spellData", spellData);
 
-      // private setDamage(cast: CastDetails, spellData: ISpellData) {
-      //   if (this.damageBySpell.hasOwnProperty(cast.spellId)) {
-      //     const event = this.damageBySpell[cast.spellId].find((d) =>
-      //       this.matchDamage(cast, spellData, d, cast.castEnd, true));
-
-
-
       const details = new CastDetails({
         castId,
         spellId: spellData.mainId,
@@ -165,25 +158,25 @@ export class EventAnalyzer {
         CP: currentCP
       });
 
-      if (CPGenerators.includes(castId)) {
-        const event = this.damageBySpell[castId].find((d) =>
-          this.matchDamage(details, spellData, d, details.castEnd, true));
-        if (event) {
-          if ([HitType.CRIT, HitType.CRIT_PARTIAL_RESIST].includes(event.hitType)) {
-            currentCP += 2;
-            // console.log("crit!CP+2", currentCP);
-          }
-          else if (![HitType.RESIST, HitType.IMMUNE, HitType.MISS, HitType.PARRY, HitType.DODGE].includes(event.hitType)) {
-            currentCP++;
-            // console.log("CP+1!", currentCP);
-          }
-        }
-      }
+      // if (CPGenerators.includes(castId)) {
+      //   const event = this.damageBySpell[castId].find((d) =>
+      //     this.matchDamage(details, spellData, d, details.castEnd, true));
+      //   if (event) {
+      //     if ([HitType.CRIT, HitType.CRIT_PARTIAL_RESIST].includes(event.hitType)) {
+      //       currentCP += 2;
+      //       // console.log("crit!CP+2", currentCP);
+      //     }
+      //     else if (![HitType.RESIST, HitType.IMMUNE, HitType.MISS, HitType.PARRY, HitType.DODGE].includes(event.hitType)) {
+      //       currentCP++;
+      //       // console.log("CP+1!", currentCP);
+      //     }
+      //   }
+      // }
 
-      if (CPSpenders.includes(castId)) {
-        const event = this.damageBySpell[castId].find((d) =>
-          this.matchDamage(details, spellData, d, details.castEnd, true));
-      }
+      // if (CPSpenders.includes(castId)) {
+      //   const event = this.damageBySpell[castId].find((d) =>
+      //     this.matchDamage(details, spellData, d, details.castEnd, true));
+      // }
 
       // console.log(details);
 
@@ -204,9 +197,8 @@ export class EventAnalyzer {
       startingCast = activeStats = null;
     }
 
-    console.log("last event");
     if (this.buffs.some(x => x.id == AuraId.SAVAGE_ROAR)) {
-      console.log("manually removing SR");
+      console.log("manually removing SR (end of fight)");
       this.removeBuff({
         type: "removebuff",
         ability: { name: "Savage Roar", guid: AuraId.SAVAGE_ROAR },
@@ -359,7 +351,7 @@ export class EventAnalyzer {
     } else {
       this.buffs.push({ id: event.ability.guid, data, event });
       if (event.ability.guid == SpellId.ROAR) {
-        console.log("Detect SR cast");
+        console.log("SR cast");
         const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
         console.log(`${tsFormatted} :${event.timestamp} [${this.analysis.encounter.start}-${this.analysis.encounter.end}]`)
         this.lastSavageRoar = event.timestamp;
@@ -371,7 +363,7 @@ export class EventAnalyzer {
     const index = this.buffs.findIndex((b) => b.id === event.ability.guid);
     if (index >= 0) {
       if (event.ability.guid == SpellId.ROAR) {
-        console.log("Detect SR fade");
+        console.log("SR fade");
         const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
         console.log(`${tsFormatted} :${event.timestamp} [${this.analysis.encounter.start}-${this.analysis.encounter.end}]`)
         this.savageRoarDurationTotal += (event.timestamp - this.lastSavageRoar);
@@ -433,9 +425,6 @@ export class EventAnalyzer {
       // look for a damage event around the time we should expect a hit for the spell
       // and infer the actual target from that instance, if found.
       const delta = spellData.maxDuration > 0 ? (spellData.maxDuration / spellData.maxDamageInstances) * 1000 : spellData.damageType === DamageType.DIRECTAOE? 500 : 3000;
-      if(spellData.damageType == DamageType.DIRECTAOE || cast.spellId == 62078){
-        console.log(delta);
-      }
       const firstDamageTimestamp = cast.castEnd + delta + EventAnalyzer.EVENT_LEEWAY;
       const firstInstance = damageEvents.find((e) =>
         this.matchDamage(cast, spellData, e, firstDamageTimestamp, true));

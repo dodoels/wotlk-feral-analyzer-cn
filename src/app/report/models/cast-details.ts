@@ -103,12 +103,6 @@ export class CastDetails {
       resisted += next.resisted;
       targets.push(next.targetId);
 
-      if ([HitType.RESIST, HitType.IMMUNE,HitType.NONE].includes(next.hitType)) {
-        if(this.name="Shred"){
-          console.log(next);
-        }
-      }
-
       if (![HitType.RESIST, HitType.IMMUNE].includes(next.hitType)) {
         hits++;
       }
@@ -117,7 +111,7 @@ export class CastDetails {
         crits++;
       }
 
-      if(![HitType.BLOCK, HitType.GLANCE, HitType.DODGE, HitType.PARRY,
+      if(![HitType.BLOCK, HitType.CRIT_BLOCK, HitType.GLANCE, HitType.DODGE, HitType.PARRY,
         HitType.NONE,HitType.HIT,HitType.CRIT,HitType.ABSORB,HitType.IMMUNE,HitType.RESIST,HitType.PARTIAL_RESIST,HitType.CRIT_PARTIAL_RESIST].includes(next.hitType)){
           console.log(`unknown hit type for spell ${this.name}`, next.hitType);
           console.log(this)

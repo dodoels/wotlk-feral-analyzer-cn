@@ -170,8 +170,10 @@ export class Spell {
         [48479]: 9
       },
       maxRank: 10,
-      damageType: DamageType.DIRECT,
-      maxDamageInstances: 1,
+      damageType: DamageType.AOE,
+      multiTarget: true,
+      maxDuration: 0.5,
+      maxDamageInstances: 2,
       gcd: false
     }),
 

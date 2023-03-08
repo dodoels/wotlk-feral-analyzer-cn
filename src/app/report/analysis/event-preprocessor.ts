@@ -57,8 +57,6 @@ export class EventPreprocessor {
     const casts = this.inputEvents.casts.slice();
     const spellIdsInferred: number[] = [];
 
-    // console.log(casts.slice());
-
     let instancesToCheck = this.damage.length >= EventPreprocessor.INFER_CASTS_EVENT_COUNT ?
       EventPreprocessor.INFER_CASTS_EVENT_COUNT - 1 :
       this.damage.length - 1;
@@ -91,7 +89,7 @@ export class EventPreprocessor {
       } while (nextCast && nextCast.timestamp < instance.timestamp + EventAnalyzer.EVENT_LEEWAY);
 
       if (!match && !spellIdsInferred.includes(instance.ability.guid) && instance.ability.guid != 1) {
-        // console.log('added cast', instance);
+        console.log('added cast', instance);
         casts.unshift({
           type: 'cast',
           ability: instance.ability,
@@ -206,9 +204,6 @@ export class EventPreprocessor {
           continue;
 
         case 'removebuff':
-          if(event.ability.guid == AuraId.OOC_CLEARCASTING){
-            console.log("OOC removed");
-          }
           if (active.hasOwnProperty(event.ability.guid)) {
             delete active[event.ability.guid];
           } else {

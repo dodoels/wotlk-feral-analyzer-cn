@@ -4,6 +4,7 @@ export enum HitType {
   HIT = 1,
   CRIT = 2,
   BLOCK = 4,
+  CRIT_BLOCK = 5,
   GLANCE = 6,
   DODGE = 7,
   PARRY = 8,
