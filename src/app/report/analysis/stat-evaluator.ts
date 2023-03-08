@@ -49,7 +49,7 @@ export class StatEvaluator {
         [Status.NOTICE]: 0.1
       },
       castProperty: 'nextCastLatency',
-      damageTypes: [DamageType.NONE, DamageType.DOT, DamageType.AOE, DamageType.DIRECT]
+      damageTypes: [DamageType.NONE, DamageType.DOT, DamageType.AOE, DamageType.DIRECTAOE, DamageType.DIRECT]
     },
 
     avgCastLatency: {

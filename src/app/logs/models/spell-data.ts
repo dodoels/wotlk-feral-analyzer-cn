@@ -7,7 +7,8 @@ export enum DamageType {
   DIRECT,
   DOT,
   CHANNEL,
-  AOE
+  AOE,
+  DIRECTAOE
 }
 
 function data(params: Partial<ISpellData> = {}): ISpellData {
@@ -85,26 +86,6 @@ export class Spell {
       gcd: false
     }),
 
-    [SpellId.DEVOURING_PLAGUE]: data({
-      rankIds: {
-        [19280]: 6,
-        [25467]: 7,
-        [48299]: 8
-      },
-      maxRank: 9,
-      damageIds: [SpellId.IMPROVED_DEVOURING_PLAGUE],
-      damageType: DamageType.DOT,
-      dotHaste: true,
-      maxDamageInstances: 9, // +1 for improved devouring plague
-      maxDuration: 24,
-      maxTicks: 8,
-      baseTickTime: 3,
-      maxInstancesPerDamageId: {
-        [SpellId.IMPROVED_DEVOURING_PLAGUE]: 1,
-        [SpellId.DEVOURING_PLAGUE]: 8
-      }
-    }),
-
     [SpellId.RIP]: data({
       rankIds: {
         [9896]: 6,
@@ -127,16 +108,13 @@ export class Spell {
       })
     }),
 
-    [SpellId.DISPEL_MAGIC]: data({
-      damageType: DamageType.NONE
-    }),
-
     [SpellId.NATURES_GRASP]: data({
       damageType: DamageType.NONE
     }),
 
     [SpellId.FAERIE_FIRE_FERAL]: data({
-      damageType: DamageType.NONE
+      damageType: DamageType.DIRECT,
+      damageIds: [SpellId.FAERIE_FIRE_FERAL_DMG]
     }),
 
     [SpellId.FAERIE_FIRE]: data({
@@ -160,6 +138,24 @@ export class Spell {
       damageType: DamageType.AOE,
       maxDamageInstances: 20,
       gcd: false
+    }),
+
+    [SpellId.SWIPE_CAT]: data({
+      damageType: DamageType.DIRECTAOE,
+      multiTarget: true,
+      maxDuration: 0.5,
+    }),
+
+    [SpellId.SWIPE_BEAR]: data({
+      damageType: DamageType.DIRECTAOE,
+      rankIds: {
+        [9908]: 5,
+        [26997]: 6,
+        [48561]: 7
+      },
+      maxDuration: 0.5,
+      maxRank: 8,
+      multiTarget: true,
     }),
 
     [SpellId.MELEE]: data({
@@ -300,8 +296,26 @@ export class Spell {
       maxDuration: 9,
       maxTicks: 3,
       baseTickTime: 3
-    })
+    }),
+
+    [SpellId.POUNCE]: data({
+      damageType: DamageType.DOT,
+      rankIds: {
+        [9904]: 2,
+        [27003]: 3,
+        [48573]: 4
+      },
+      maxRank: 5,
+      dotHaste: false,
+      maxDamageInstances: 6,
+      maxDuration: 18,
+      maxTicks: 6,
+      baseTickTime: 3,
+      damageIds: [SpellId.POUNCE_BLEED]
+    }),
   }
+
+  
 
   public static dataBySpellId: { [spellId: number]: ISpellData } =
     Object.keys(Spell.data).reduce((lookup, next) => {

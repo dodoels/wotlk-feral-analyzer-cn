@@ -45,25 +45,13 @@ export class LogSummary {
         const actor = new Actor(friendlyData, true, this.anon);
         this.names[actor.id] = actor.name;
 
-        if ((friendlyData.icon === 'Priest-Shadow' || friendlyData.icon === 'Priest' 
-        || friendlyData.icon === 'Druid-Feral' || friendlyData.icon === 'Druid') && this.hasEncounters(actor)) {
+        if ((friendlyData.icon === 'Druid-Feral' || friendlyData.icon === 'Druid') && this.hasEncounters(actor)) {
           this.shadowPriests.push(actor);
         }
         return actor;
       });
 
     this.actors = allEnemies.concat(allFriendlies);
-
-    // Find shadowfiends and assign to their respective priests
-    // const fiends = this.actors.filter((a) => a.friendly && a.pet && a.name === 'Shadowfiend');
-    // for (const fiend of fiends) {
-    //   if (fiend.owner !== undefined) {
-    //     const priest = this.getActor(fiend.owner);
-    //     if (priest) {
-    //       priest.shadowFiendId = fiend.id;
-    //     }
-    //   }
-    // }
   }
 
   getEncounter(id: number) {

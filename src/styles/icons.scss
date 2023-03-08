@@ -6,6 +6,7 @@
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  border-radius: 5px;
 
   // VT
   &.spell-48160, &.spell-vt {
@@ -99,6 +100,10 @@
 
   &.spell-53023, &.spell-mind-sear {
     background-image: url('/feral/assets/mindsear.jpg');
+  }
+
+  &.spell-49803, &.spell-pounce {
+    background-image: url('/feral/assets/pounce.jpg');
   }
 
   /**
@@ -236,6 +241,10 @@
 
   &.spell-16857, &.spell-fff, &.spell-770 {
     background-image: url('/feral/assets/faerie_fire.jpg');
+  }
+
+  &.spell-62078, &.spell-swipe, &.spell-48562 {
+    background-image: url('/feral/assets/swipe.jpg');
   }
 
   &.spell-1, &.spell-melee {
