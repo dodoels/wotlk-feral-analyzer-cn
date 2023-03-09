@@ -10,6 +10,7 @@ import { format } from 'src/app/report/models/stat-utils';
 export class SettingsHintComponent {
   public missingHaste: string;
   public description: string;
+  public descriptionTier: string;
 
   private close: () => void;
   private callback: () => void;
@@ -18,9 +19,12 @@ export class SettingsHintComponent {
     this.callback = data.openSettings;
     this.close = data.close;
 
-    if (data.hasteError) {
+    if (data.showHasteError && data.hasteError) {
       this.missingHaste = format(Math.abs(data.hasteError * 100), 1, '%');
       this.description = data.hasteError < 0 ? 'Excess' : 'Missing';
+    }
+    if(data.inferTier7 !== undefined){
+      this.descriptionTier = `Assumed Tier 7 2-set bonus ${data.inferTier7?'active.':' disabled.'}`;
     }
   }
 
@@ -36,7 +40,9 @@ export class SettingsHintComponent {
 }
 
 export interface ISettingsHintData {
+  showHasteError: boolean;
   hasteError: number|undefined;
+  inferTier7: boolean|undefined;
   openSettings: () => void;
   close: () => void;
 }

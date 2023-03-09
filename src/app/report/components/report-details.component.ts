@@ -46,15 +46,15 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
   private snackBarRef: MatSnackBarRef<SettingsHintComponent>;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-              private location: Location,
-              private router: Router,
-              private route: ActivatedRoute,
-              private logs: LogsService,
-              private eventSvc: EventService,
-              private settingsSvc: SettingsService,
-              private params: ParamsService,
-              private snackBar: MatSnackBar,
-              private title: Title) {
+    private location: Location,
+    private router: Router,
+    private route: ActivatedRoute,
+    private logs: LogsService,
+    private eventSvc: EventService,
+    private settingsSvc: SettingsService,
+    private params: ParamsService,
+    private snackBar: MatSnackBar,
+    private title: Title) {
   }
 
   ngOnInit(): void {
@@ -81,14 +81,14 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
 
         return of(null);
       })
-    ).subscribe((analysis: PlayerAnalysis|null) => {
+    ).subscribe((analysis: PlayerAnalysis | null) => {
       if (analysis) {
         this.analysis = analysis;
         this.analysis.refresh(this.settingsSvc.get(this.playerId));
         this.highlight = new StatHighlights(this.analysis);
 
         this.targets = this.analysis.targetIds
-          .map((id) => ({id, name: this.analysis.log.getActorName(id)}))
+          .map((id) => ({ id, name: this.analysis.log.getActorName(id) }))
           .filter((t) => (t.name?.length || 0) > 0)
           .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -193,7 +193,7 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
   }
 
   private checkDownranking() {
-    const downranked: {[id: number]: IDownrankedSpell} = this.analysis.report.casts.reduce((downranked, cast) => {
+    const downranked: { [id: number]: IDownrankedSpell } = this.analysis.report.casts.reduce((downranked, cast) => {
       if (cast.downranked) {
         const castRank = cast.rank as number;
         if (downranked.hasOwnProperty(cast.spellId)) {
@@ -211,7 +211,7 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
       }
 
       return downranked;
-    }, {} as {[id: number]: IDownrankedSpell});
+    }, {} as { [id: number]: IDownrankedSpell });
 
     this.downranked = Object
       .values(downranked)
@@ -257,20 +257,27 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
     const hasteRating = this.analysis?.actorInfo?.stats?.hasteRating;
     const hasteError = this.analysis?.report?.stats?.avgHasteError || 0;
     const castCount = this.analysis?.report?.stats?.hasteErrorCastCount || 0;
+    const inferTier7 = this.analysis.actorInfo.initFromLog == false ? this.analysis.tierBonuses.tier7_2p : undefined;
+
+    console.log(this.analysis.tierBonuses.tier7_2p);
 
     // eslint-disable-next-line no-console
-    console.log(`Avg Haste Error: ${Math.round(hasteError * 10000)/100}%; Cast Count: ${castCount}`);
+    console.log(`Avg Haste Error: ${Math.round(hasteError * 10000) / 100}%; Cast Count: ${castCount}`);
 
-    if (hasteRating === undefined || (castCount > 10 && Math.abs(hasteError) > .03)) {
-      this.openSnackbar(hasteRating === undefined ? undefined : hasteError);
+    const showHasteError = (hasteRating === undefined || (castCount > 10 && Math.abs(hasteError) > .03));
+
+    if (showHasteError || inferTier7 != undefined) {
+      this.openSnackbar(showHasteError, hasteRating === undefined ? undefined : hasteError, inferTier7);
     }
   }
 
-  private openSnackbar(hasteError?: number) {
+  private openSnackbar(showHasteError: boolean, hasteError?: number, inferTier7?: boolean) {
     if (this.settingsSvc.showHint(this.playerId, this.encounterId)) {
       this.snackBarRef = this.snackBar.openFromComponent(SettingsHintComponent, {
         data: {
+          showHasteError,
           hasteError,
+          inferTier7,
           close: () => this.closeSnackbar(),
           openSettings: () => this.openSettings()
         },

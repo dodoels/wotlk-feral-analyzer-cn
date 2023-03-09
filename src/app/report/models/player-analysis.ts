@@ -55,25 +55,28 @@ export class PlayerAnalysis {
     this._rawStats = actorInfo.stats;
     this._rawEvents = events;
 
-    if (actorInfo.gear?.length > 0) {
-      const t7_2p = Item.HasTier7bonus2p(actorInfo.gear);
-      console.log("Player has 2p tier 7? ", t7_2p);
-      settings.tier7_2p = t7_2p;
-    } else {
-      // TODO: SHOW WARNING!!
-      console.log("No gear found");
-    }
-
-    this.tierBonuses = {tier7_2p: settings.tier7_2p}
+    this.setTierBonuses();
 
     this.analyze();
 
     console.log(actorInfo);
   }
 
+  private setTierBonuses(){
+    if (this.actorInfo.gear?.length > 0) {
+      const t7_2p = Item.HasTier7bonus2p(this.actorInfo.gear);
+      console.log("Player has 2p tier 7? ", t7_2p);
+      this.settings.tier7_2p = t7_2p;
+    } else {
+      console.log("No gear found");
+    }
+    this.tierBonuses = {tier7_2p: this.settings.tier7_2p}
+  }
+
   refresh(settings: Settings) {
     if (!this.settings.equals(settings)) {
       this.settings = settings;
+      this.setTierBonuses();
       this.analyze();
     }
   }
