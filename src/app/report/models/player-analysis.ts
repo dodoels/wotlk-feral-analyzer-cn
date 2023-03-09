@@ -14,6 +14,7 @@ import { Actor } from 'src/app/logs/models/actor';
 import { CombatantInfo } from 'src/app/logs/models/combatant-info';
 import { Settings } from 'src/app/settings';
 import { EventPreprocessor } from 'src/app/report/analysis/event-preprocessor';
+import { Item } from 'src/app/logs/models/item-data';
 
 export class PlayerAnalysis {
   public log: LogSummary;
@@ -29,9 +30,9 @@ export class PlayerAnalysis {
 
   private _rawStats: ActorStats;
   private _rawEvents: IEncounterEvents;
-  private _applyWrathOfAir: boolean|undefined;
+  private _applyWrathOfAir: boolean | undefined;
 
-  private static _cache: {[key: string]: PlayerAnalysis} = {};
+  private static _cache: { [key: string]: PlayerAnalysis } = {};
   public static getCached(logId: string, encounterId: number, playerId: string) {
     return PlayerAnalysis._cache[PlayerAnalysis.cacheKey(logId, playerId, encounterId)];
   }
@@ -52,7 +53,16 @@ export class PlayerAnalysis {
     this._rawStats = actorInfo.stats;
     this._rawEvents = events;
 
+    if (actorInfo.gear?.length > 0) {
+      const t7_2p = Item.HasTier7bonus2p(actorInfo.gear);
+      console.log("Player has 2p tier 7? ", t7_2p);
+    } else {
+      console.log("No gear found");
+    }
+
     this.analyze();
+
+    console.log(actorInfo);
   }
 
   refresh(settings: Settings) {
@@ -78,7 +88,7 @@ export class PlayerAnalysis {
     return this.log.getActorName(targetId, targetInstance);
   }
 
-  stats(options: IStatsSearch): CastStats|undefined {
+  stats(options: IStatsSearch): CastStats | undefined {
     let stats = options.spellId === SpellId.NONE ?
       this.report.stats :
       this.report.getSpellStats(options.spellId);

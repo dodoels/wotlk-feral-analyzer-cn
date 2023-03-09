@@ -81,7 +81,11 @@
           <span class="power" *ngIf="!showHaste">AP: <span class="table-accent">{{ cast.spellPower }}</span></span>
           <span [ngClass]="{'damage':true, 'vis-hidden':!isDamage(cast)}" *ngIf="!cast.failed">
             <span class="damage-label">Damage: </span>
-            <span class="spell-accent" [ngClass]="{ 'crit': cast.crit }"><span *ngIf="cast.crit">*</span>{{ cast.totalDamage }}<span *ngIf="cast.crit">*</span></span>
+            <span class="spell-accent" [ngClass]="{ 'crit': cast.crit }" *ngIf="!cast.failed"><span *ngIf="cast.crit">*</span>{{ cast.totalDamage }}<span *ngIf="cast.crit">*</span></span>
+          </span>
+          <span [ngClass]="{'damage':true, 'vis-hidden':!isDamage(cast)}" *ngIf="cast.failed">
+            <span class="damage-label">Failed: </span>
+            <span *ngIf="cast.failed" class="spell-accent">{{ cast.failType }}</span>
           </span>
           <span class="damage" *ngIf="cast.resisted"><span class="text-warning">Resisted</span></span>
           <span class="damage" *ngIf="cast.immune"><span class="text-warning">Immune</span></span>

@@ -198,7 +198,6 @@ export class EventAnalyzer {
     }
 
     if (this.buffs.some(x => x.id == AuraId.SAVAGE_ROAR)) {
-      console.log("manually removing SR (end of fight)");
       this.removeBuff({
         type: "removebuff",
         ability: { name: "Savage Roar", guid: AuraId.SAVAGE_ROAR },
@@ -445,13 +444,18 @@ export class EventAnalyzer {
       i++;
     } while (nextCast.timestamp <= maxDamageTimestamp + EventAnalyzer.EVENT_LEEWAY);
 
+
+    
     // Process damage instances for this spell within the window
     nextDamage = damageEvents[0];
     let count = 0;
     i = 0;
 
     while (nextDamage && (!spellData.maxDamageInstances || count < spellData.maxDamageInstances)) {
-      if (this.matchDamage(cast, spellData, nextDamage, maxDamageTimestamp)) {
+      if (this.matchDamage(cast, spellData, nextDamage, maxDamageTimestamp)
+      && (cast.spellId != SpellId.RAKE || count == 0 || nextDamage.tick == true)) {
+        // Prevent rake from adding the next rake's initial hit
+        
         // This is a little complicated because of differences between channeled, dot, and AoE damage
         // Each individual damage instance for AoE can resist individually, so we just count them all without condition
         //
@@ -514,8 +518,9 @@ export class EventAnalyzer {
   // -- and the cast was not resisted (requires finding an associated damage instance)
   private castIsReplacement(cast: CastDetails, spellData: ISpellData, next: ICastData, events: IDamageData[]) {
     // check for matching target
+    
     if (next.type !== 'cast' || Spell.baseData(next.ability.guid).mainId !== cast.spellId ||
-      next.targetID !== cast.targetId || next.targetInstance !== cast.targetInstance) {
+      next.targetID !== cast.targetId || next.targetInstance !== cast.targetInstance || spellData.damageType == DamageType.DIRECTAOE) {
       return false;
     }
 
@@ -533,7 +538,8 @@ export class EventAnalyzer {
 
   private failed(spellId: SpellId, event: IDamageData, count?: number) {
     // resists always failed.
-    if (event.hitType === HitType.RESIST) {
+    if ([HitType.RESIST, HitType.MISS, HitType.DODGE, HitType.PARRY].includes(event.hitType) ||
+      ([HitType.BLOCK, HitType.CRIT_BLOCK].includes(event.hitType) && event.amount === 0)) {
       return true;
     }
 
@@ -561,9 +567,14 @@ export class EventAnalyzer {
 
     // damage must take place in the proper window
     // for dots, allow EVENT_LEEWAY for each tick
-    const leeway = spellData.maxDamageInstances > 1 ?
+    const leeway = (spellData.maxDamageInstances > 1 && spellData.damageType == DamageType.DOT) ?
       (spellData.maxDamageInstances * EventAnalyzer.EVENT_LEEWAY) :
       EventAnalyzer.EVENT_LEEWAY;
+
+    // if(next.ability.guid == SpellId.MAUL){
+    //   console.log('leeway', leeway);
+    //   console.log(`${next.timestamp} max: ${maxTimestamp}`)
+    // }
 
     if (next.timestamp < (cast.castEnd - EventAnalyzer.EVENT_LEEWAY) || next.timestamp > (maxTimestamp + leeway)) {
       return false;

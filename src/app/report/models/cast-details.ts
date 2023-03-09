@@ -103,6 +103,10 @@ export class CastDetails {
       resisted += next.resisted;
       targets.push(next.targetId);
 
+      // if(this.spellId == SpellId.RAKE){
+      //   console.log(next);
+      // }
+
       if (![HitType.RESIST, HitType.IMMUNE].includes(next.hitType)) {
         hits++;
       }
@@ -140,8 +144,29 @@ export class CastDetails {
     }
   }
 
+  get failType(){
+    let failTypeDesc = "FAIL";
+    switch(this.hitType){
+      case HitType.MISS:
+        failTypeDesc = "MISS";
+        break;
+      case HitType.BLOCK:
+      case HitType.CRIT_BLOCK:
+        failTypeDesc = "BLOCK";
+        break;
+      case HitType.PARRY:
+        failTypeDesc = "PARRY";
+        break;
+      case HitType.DODGE:
+        failTypeDesc = "DODGE";
+        break;
+    }
+    return failTypeDesc;
+  }
+
   get failed() {
-    return [HitType.RESIST, HitType.IMMUNE].includes(this.hitType);
+    return [HitType.RESIST, HitType.IMMUNE, HitType.NONE, HitType.DODGE, HitType.PARRY].includes(this.hitType) || 
+    ([HitType.BLOCK, HitType.CRIT_BLOCK].includes(this.hitType) && this.totalDamage == 0);
   }
 
   get hasEnergy() {

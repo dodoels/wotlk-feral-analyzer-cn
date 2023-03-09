@@ -64,7 +64,7 @@ export class CastsAnalyzer {
               spellData.maxDuration / spellData.maxTicks :
               spellData.baseTickTime;
 
-            return c.hitType !== HitType.NONE || (current.castStart - c.castEnd < minTimeToTick);
+            return !c.failed // c.hitType !== HitType.NONE || (current.castStart - c.castEnd < minTimeToTick);
           });
 
           this.setDotDetails(current, spellData, prevCastData);
@@ -106,7 +106,7 @@ export class CastsAnalyzer {
       current.dotDowntime = Math.max((current.castEnd - prev.lastDamageTimestamp) / 1000, 0);
     }
 
-    const expectedEnd = prev.castEnd + (prevSpellData.maxDuration * 1000) + CastsAnalyzer.EARLY_CLIP_LEEWAY;
+    const expectedEnd = prev.castEnd + (prev.failed ? 0: prevSpellData.maxDuration * 1000) + CastsAnalyzer.EARLY_CLIP_LEEWAY;
     if (prev.instances.length < spellData.maxDamageInstances && current.castEnd <= expectedEnd) {
       current.clippedPreviousCast = true;
       current.clippedTicks = spellData.maxDamageInstances - prev.instances.length;
@@ -224,6 +224,8 @@ export class CastsAnalyzer {
   }
 
   private failed(cast: CastDetails) {
+    return ([HitType.RESIST, HitType.MISS, HitType.DODGE, HitType.PARRY].includes(cast.hitType) ||
+      ([HitType.BLOCK, HitType.CRIT_BLOCK].includes(cast.hitType) && cast.totalDamage === 0)); 
     return cast.hitType === HitType.RESIST || cast.hitType === HitType.IMMUNE;
   }
 }

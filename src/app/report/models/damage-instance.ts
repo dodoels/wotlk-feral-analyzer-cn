@@ -11,6 +11,7 @@ export class DamageInstance {
   resisted: number;
   maxHitPoints: number;
   hitPoints: number;
+  isTick: boolean;
 
   constructor(data: IDamageData) {
     this.timestamp = data.timestamp;
@@ -22,6 +23,7 @@ export class DamageInstance {
     this.resisted = data.resisted || 0;
     this.maxHitPoints = data.maxHitPoints;
     this.hitPoints = data.hitPoints;
+    this.isTick = data.tick == true;
   }
 
   get totalDamage() {
