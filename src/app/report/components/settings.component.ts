@@ -58,7 +58,7 @@ export class SettingsComponent implements OnInit {
         hasteRating: new FormControl(this.logHasteRating),
         improvedMindBlast: new FormControl(analysis.settings.improvedMindBlast, { nonNullable: true }),
         improvedMoonkinAura: new FormControl(analysis.settings.improvedMoonkinAura, { nonNullable: true }),
-        tier7_2p: new FormControl(analysis.settings.tier7_2p, { nonNullable: true }),
+        tier7_2p: new FormControl(analysis.tierBonuses.tier7_2p, { nonNullable: true }),
         tier8_4p: new FormControl(analysis.settings.tier8_4p, { nonNullable: true }),
         ripGlyphActive: new FormControl(analysis.settings.ripGlyphActive, { nonNullable: true }),
         shredGlyphActive: new FormControl(analysis.settings.shredGlyphActive, { nonNullable: true }),
@@ -69,6 +69,7 @@ export class SettingsComponent implements OnInit {
       });
 
       if (this.analysis.actorInfo?.initFromLog) {
+        this.form.controls.tier7_2p.disable();
         this.form.controls.hasteRating.disable();
         this.form.controls.moonkinAura.disable();
       }

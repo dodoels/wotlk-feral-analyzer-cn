@@ -35,6 +35,9 @@
     <div class="slide-toggle">
       <mat-slide-toggle color="primary" formControlName="tier7_2p">Feral Tier 7 2-piece bonus</mat-slide-toggle>
       <p class="mat-hint table-accent">Rip lasts an additional 4 seconds.</p>
+      <mat-hint class="table-accent" *ngIf="form.controls.tier7_2p.disabled">
+        Set from summary information in the log.
+      </mat-hint>
     </div>
 <!--     
   <div class="slide-toggle">

@@ -15,6 +15,7 @@ import { CombatantInfo } from 'src/app/logs/models/combatant-info';
 import { Settings } from 'src/app/settings';
 import { EventPreprocessor } from 'src/app/report/analysis/event-preprocessor';
 import { Item } from 'src/app/logs/models/item-data';
+import { TierBonuses } from 'src/app/logs/interfaces';
 
 export class PlayerAnalysis {
   public log: LogSummary;
@@ -27,6 +28,7 @@ export class PlayerAnalysis {
   public report: Report;
   public totalGcds: number;
   public savageRoarDuration: number;
+  public tierBonuses: TierBonuses;
 
   private _rawStats: ActorStats;
   private _rawEvents: IEncounterEvents;
@@ -56,9 +58,13 @@ export class PlayerAnalysis {
     if (actorInfo.gear?.length > 0) {
       const t7_2p = Item.HasTier7bonus2p(actorInfo.gear);
       console.log("Player has 2p tier 7? ", t7_2p);
+      settings.tier7_2p = t7_2p;
     } else {
+      // TODO: SHOW WARNING!!
       console.log("No gear found");
     }
+
+    this.tierBonuses = {tier7_2p: settings.tier7_2p}
 
     this.analyze();
 

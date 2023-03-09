@@ -1,6 +1,7 @@
 import { SpellId } from 'src/app/logs/models/spell-id.enum';
 import { HasteUtils } from 'src/app/report/models/haste';
 import { ISettings, Settings } from 'src/app/settings';
+import { TierBonuses } from '../interfaces';
 
 export enum DamageType {
   NONE,
@@ -35,11 +36,11 @@ export class Spell {
     return Spell.dataBySpellId[id];
   }
 
-  public static get(id: SpellId, settings: Settings, currentHaste?: number): ISpellData {
+  public static get(id: SpellId, settings: Settings, currentHaste?: number, tierBonuses?: TierBonuses): ISpellData {
     const baseData = Spell.dataBySpellId[id];
 
     // apply overrides for dynamic data
-    const dynamic = baseData.dynamic ? baseData.dynamic.call(null, baseData, settings) : {};
+    const dynamic = baseData.dynamic ? baseData.dynamic.call(null, baseData, settings, tierBonuses) : {};
     const data = Object.assign({}, Spell.dataBySpellId[id], dynamic);
 
     // apply haste adjustments if haste specified.
@@ -98,13 +99,13 @@ export class Spell {
       maxDuration: 12,
       maxTicks: 6,
       baseTickTime: 2,
-      dynamic: (baseData, settings) => ({
+      dynamic: (baseData, settings, tierBonuses) => ({
         maxDuration: baseData.maxDuration + 
-          (settings.tier7_2p ? 4 : 0) + (settings.shredGlyphActive ? 6 : 0) + (settings.ripGlyphActive ? 4 : 0),
+          (tierBonuses?.tier7_2p ? 4 : 0) + (settings?.shredGlyphActive ? 6 : 0) + (settings?.ripGlyphActive ? 4 : 0),
         maxDamageInstances: baseData.maxDamageInstances + 
-          (settings.tier7_2p ? 2 : 0) + (settings.shredGlyphActive ? 3 : 0) + (settings.ripGlyphActive ? 2 : 0),
+          (tierBonuses?.tier7_2p ? 2 : 0) + (settings?.shredGlyphActive ? 3 : 0) + (settings?.ripGlyphActive ? 2 : 0),
         maxTicks: baseData.maxTicks + 
-          (settings.tier7_2p ? 2 : 0) + (settings.shredGlyphActive ? 3 : 0) + (settings.ripGlyphActive ? 2 : 0),
+          (tierBonuses?.tier7_2p ? 2 : 0) + (settings?.shredGlyphActive ? 3 : 0) + (settings?.ripGlyphActive ? 2 : 0),
       })
     }),
 
@@ -369,5 +370,5 @@ export interface ISpellData {
   statsByTick: boolean;
   multiTarget: boolean;
   maxInstancesPerDamageId?: { [id: number]: number };
-  dynamic?: (baseData: ISpellData, settings: ISettings) => Partial<ISpellData>
+  dynamic?: (baseData: ISpellData, settings: ISettings, tierBonuses?: TierBonuses) => Partial<ISpellData>
 }

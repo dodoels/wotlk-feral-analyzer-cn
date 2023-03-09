@@ -267,7 +267,7 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
   }
 
   private openSnackbar(hasteError?: number) {
-    if (true){ //this.settingsSvc.showHint(this.playerId, this.encounterId)) {
+    if (this.settingsSvc.showHint(this.playerId, this.encounterId)) {
       this.snackBarRef = this.snackBar.openFromComponent(SettingsHintComponent, {
         data: {
           hasteError,

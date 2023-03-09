@@ -135,7 +135,7 @@ export class EventAnalyzer {
       }
 
 
-      const spellData = Spell.get(castId, this.analysis.settings, activeStats.totalHaste - 1);
+      const spellData = Spell.get(castId, this.analysis.settings, activeStats.totalHaste - 1, this.analysis.tierBonuses);
       // console.log("currentCast", currentCast);
       // console.log("spellData", spellData);
 
@@ -407,7 +407,7 @@ export class EventAnalyzer {
   }
 
   private setMultiInstanceDamage(cast: CastDetails) {
-    const spellData = Spell.get(cast.spellId, this.analysis.settings); // use base data for duration since haste can have errors
+    const spellData = Spell.get(cast.spellId, this.analysis.settings, undefined, this.analysis.tierBonuses); // use base data for duration since haste can have errors
     let i = 0;
     let instances: DamageInstance[] = [];
     let instancesById: { [id: number]: number } = {};
