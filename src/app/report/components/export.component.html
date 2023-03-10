@@ -1,9 +1,10 @@
 <section class="export" *ngIf="!!exportData">
   <div class="header">
     <h3>Sim Export</h3>
+    <h3 class="text-warning">Sim export not yet implemented for feral druids.</h3>
   </div>
 
-  <div class="controls">
+  <div class="controls vis-hidden">
     <button mat-flat-button color="primary" class="copy-button" (click)="copy($event)" [ngClass]="{ done: copied }">
       Copy to Clipboard
       <mat-icon  fontIcon="done"></mat-icon>
@@ -11,7 +12,7 @@
     <button mat-flat-button (click)="close($event)">Close</button>
   </div>
 
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" class="vis-hidden">
     <textarea matInput rows="30" #json>{{ exportJson }}</textarea>
     <p class="mat-hint table-accent">
       Import the above as JSON into <a target="_blank" href="https://wowsims.github.io/wotlk/feral_druid/">the feral sim</a>.
