@@ -31,12 +31,13 @@ Definitions of stats/terms available via the [Glossary](GLOSSARY.md). -->
 
 Almost the entirety of the underlying information about how to maximize performance as a feral druid comes from
 [druid discord](https://discord.gg/druidclassic).
-<!-- Special thanks to NerdEgghead for his organizing efforts, Linelo for him theorycrafting and sim work, and BTGF for being the best. -->
+Special thanks to NerdEgghead for his theorycrafting and sim work, as well as all other druid friends who have helped elevate cat play in the theorycrafting thread.
 
 
 ### Changelog
 - March 9th, 2023
   - Initial support for Feral!
   - ** Known Issues **
-    - If the 2 piece bonus for tier 7 cannot be inferred from the log(gear information may be missing), you may get incorrect values for rip ticks and damage.
-    - Energy is not display for certain events (during bearform or shifts)
+    - If the 2 piece bonus for tier 7 cannot be inferred from the log(gear information may be missing), you may get incorrect values for rip ticks and damage. IE: it may show that you missed rip ticks when you did not, etc.
+    - Warnings / alerts (yellow, red colors on the left hand side of casts) have not yet been updated to reflect data that is meaningful to feral druids.
+    - Some information shown on casts has not been tailored to feral druids yet such as cast time or delay.
