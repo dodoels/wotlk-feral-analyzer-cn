@@ -33,7 +33,7 @@ export enum SpellId {
   RAVAGE = 48579,
 
   // Shadow Priest Abilities (Max Rank)
-  // BERSERKING = 26297,
+  BERSERKING = 26297,
   // DEATH = 48158,
   // DEVOURING_PLAGUE = 48300,
   // DISPERSION = 47585,

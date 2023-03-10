@@ -36,12 +36,12 @@ export class TimelineSummary extends BaseSummary {
   }
 
   report(stats: CastStats) {
-    let mindFlayStats: CastStats = this.analysis.report.getSpellStats(SpellId.MIND_FLAY);
+    // let mindFlayStats: CastStats = this.analysis.report.getSpellStats(SpellId.MIND_FLAY);
     let ripStats: CastStats = this.analysis.report.getSpellStats(SpellId.RIP);
 
-    if (stats.targetId) {
-      mindFlayStats = mindFlayStats.targetStats(stats.targetId);
-    }
+    // if (stats.targetId) {
+    //   mindFlayStats = mindFlayStats.targetStats(stats.targetId);
+    // }
 
     return this.summaryFields.fields(stats)
       .concat(this.dotFields.fields(stats))

@@ -1,5 +1,7 @@
 # Definitions
 
+### THIS PAGE HAS NOT BEEN UPDATED WITH THE CHANGES TO THE FERAL ANALYZER
+
 ### Active DPS
 
 Total Damage / Active Time (see below)
