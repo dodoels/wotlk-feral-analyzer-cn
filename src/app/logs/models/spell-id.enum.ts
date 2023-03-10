@@ -31,6 +31,10 @@ export enum SpellId {
   POUNCE_BLEED = 49804,
   MAIM = 49802,
   RAVAGE = 48579,
+  WRATH = 48461,
+  STARFIRE = 48465,
+  MOONFIRE = 48463,
+
 
   // Shadow Priest Abilities (Max Rank)
   BERSERKING = 26297,

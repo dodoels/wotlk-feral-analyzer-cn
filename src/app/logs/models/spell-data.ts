@@ -344,6 +344,41 @@ export class Spell {
       energyCost: 35,
     }),
 
+    [SpellId.WRATH]: data({
+      damageType: DamageType.DIRECT,
+      rankIds: {
+        [9912]: 8,
+        [26984]: 9,
+        [26985]: 10,
+        [48459]: 11,
+      },
+      baseCastTime:2,
+      maxRank: 12,
+    }),
+
+    [SpellId.STARFIRE]: data({
+      damageType: DamageType.DIRECT,
+      rankIds: {
+        [9876]: 6,
+        [25298]: 7,
+        [26986]: 8,
+        [48464]: 9,
+      },
+      baseCastTime: 3.5,
+      maxRank: 10,
+    }),
+
+    [SpellId.MOONFIRE]: data({
+      damageType: DamageType.DOT,
+      rankIds: {
+        [9835]: 10,
+        [26987]: 11,
+        [26988]: 12,
+        [48462]: 13,
+      },
+      maxRank: 14,
+    }),
+
     [SpellId.RAVAGE]: data({
       damageType: DamageType.DIRECT,
       rankIds: {
