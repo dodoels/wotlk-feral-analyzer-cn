@@ -19,6 +19,8 @@ export class EventAnalyzer {
   public static EVENT_LEEWAY = 100; // in milliseconds. Allow damage to occur just slightly later than "should" be
   // possible given strict debuff times. Blah blah server doesn't keep time exactly.
 
+  public static TRAVEL_TIME_LEEWAY = 2500;
+
   private static MIN_INFER_HASTE_EVENTS = 8; // require a minimum of MB/VT casts to infer missing haste value
 
   private analysis: PlayerAnalysis;
@@ -579,12 +581,18 @@ export class EventAnalyzer {
       return false;
     }
 
+    if(spellData.mainId == SpellId.WRATH){
+      console.log(next);
+    }
+
     // damage must take place in the proper window
     // for dots, allow EVENT_LEEWAY for each tick
     const leeway = (spellData.maxDamageInstances > 1 && spellData.damageType == DamageType.DOT) ?
       (spellData.maxDamageInstances * EventAnalyzer.EVENT_LEEWAY) :
-      EventAnalyzer.EVENT_LEEWAY;
+      EventAnalyzer.EVENT_LEEWAY + (spellData.hasTravelTime? EventAnalyzer.TRAVEL_TIME_LEEWAY : 0);
 
+    
+    
     if (next.timestamp < (cast.castEnd - EventAnalyzer.EVENT_LEEWAY) || next.timestamp > (maxTimestamp + leeway)) {
       return false;
     }

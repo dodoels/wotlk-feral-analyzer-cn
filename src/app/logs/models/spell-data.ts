@@ -31,6 +31,7 @@ export class Spell {
     statsByTick: false,
     multiTarget: false,
     energyCost: 0,
+    hasTravelTime: false,
   };
 
   public static baseData(id: SpellId) {
@@ -354,6 +355,7 @@ export class Spell {
       },
       baseCastTime:2,
       maxRank: 12,
+      hasTravelTime: true,
     }),
 
     [SpellId.STARFIRE]: data({
@@ -424,6 +426,7 @@ export interface ISpellData {
   dotHaste: boolean;
   statsByTick: boolean;
   multiTarget: boolean;
+  hasTravelTime: boolean;
   maxInstancesPerDamageId?: { [id: number]: number };
   dynamic?: (baseData: ISpellData, settings: ISettings, tierBonuses?: TierBonuses) => Partial<ISpellData>
   energyCost: number;
