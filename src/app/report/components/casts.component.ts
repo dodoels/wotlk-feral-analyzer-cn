@@ -131,6 +131,10 @@ export class CastsComponent implements OnInit, OnChanges, AfterViewInit {
     return this.duration(cast.castTimeMs, 'S.dd');
   }
 
+  showCast(cast: CastDetails){
+    return cast.castTimeMs > 0;
+  }
+
   isDamage(cast: CastDetails) {
     return Spell.baseData(cast.spellId).damageType !== DamageType.NONE;
   }

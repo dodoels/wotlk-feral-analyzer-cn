@@ -116,6 +116,7 @@ export class StatHighlights {
       status = this.evaluator.threshold('avgCastLatency', data.avgNextCastLatency);
     }
 
+    // return this.textHighlight(Status.NORMAL);
     return this.textHighlight(status);
   }
 

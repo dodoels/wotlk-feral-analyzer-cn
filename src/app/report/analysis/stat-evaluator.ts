@@ -116,17 +116,17 @@ export class StatEvaluator {
       return Status.WARNING;
     }
 
-    if (this.checkThresholds(cast, Status.WARNING)) {
-      return Status.WARNING;
-    }
+    // if (this.checkThresholds(cast, Status.WARNING)) {
+    //   return Status.WARNING;
+    // }
 
     if (this.missingTicks(cast, spellData)) {
       return Status.NOTICE;
     }
 
-    if (this.checkThresholds(cast, Status.NOTICE)) {
-      return Status.NOTICE;
-    }
+    // if (this.checkThresholds(cast, Status.NOTICE)) {
+    //   return Status.NOTICE;
+    // }
 
     return Status.NORMAL;
   }
