@@ -13,6 +13,7 @@ import { mapSpellId, SpellId } from 'src/app/logs/models/spell-id.enum';
 import { matchTarget } from 'src/app/report/analysis/utils';
 import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
 import { AuraId } from 'src/app/logs/models/aura-id.enum';
+import { ResourceType } from 'src/app/logs/models/resource-type.enum';
 
 export class EventAnalyzer {
   public static EVENT_LEEWAY = 100; // in milliseconds. Allow damage to occur just slightly later than "should" be
@@ -71,22 +72,49 @@ export class EventAnalyzer {
       currentCast: ICastData,
       castBuffs: IBuffEvent[] = [],
       activeStats: IHasteStats | null = null,
-      startingCast: ICastData | null = null;
+      startingCast: ICastData | null = null,
+      lastEnergy: number | null = null,
+      lastEnergyTimestamp: number | null = null;
 
     const casts: CastDetails[] = [];
 
     let currentCP = 0;
-    // TODO: POUNCE, RAVAGE
-    const CPGenerators = [SpellId.RAKE, SpellId.MANGLE_CAT, SpellId.SHRED];
-    // TODO: MAIN
-    const CPSpenders = [SpellId.RIP, SpellId.ROAR, SpellId.BITE];
+    const CPGenerators = [SpellId.RAKE, SpellId.MANGLE_CAT, SpellId.SHRED, SpellId.POUNCE, SpellId.RAVAGE];
+    const CPSpenders = [SpellId.RIP, SpellId.ROAR, SpellId.BITE, SpellId.MAIM];
 
 
 
     while (this.events.length > 0) {
       event = this.events.shift() as IEventData;
 
+      let eventEnergy: number | undefined = undefined;
 
+      // Check for energy
+      const energy = event.classResources?.find(x => x.type === ResourceType.ENERGY);
+      if (energy) {
+        eventEnergy = energy.amount;
+        const energyCost =
+          Spell.energyCost(event.ability.guid,
+            this.buffs.some(x => x.id == AuraId.FERAL_BERSERK),
+            this.buffs.some(x => x.id == AuraId.OOC_CLEARCASTING)
+          );
+        lastEnergy = eventEnergy - energyCost;
+        if (lastEnergy < 0) {
+          if (event.ability.guid != SpellId.BITE) {
+            const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
+            console.log(`${tsFormatted} Negative Energy Encountered ${lastEnergy} cost ${energyCost}`);
+            console.log(event);
+            console.log(this.buffs.slice());
+          }
+          lastEnergy = 0;
+        }
+        lastEnergyTimestamp = event.timestamp;
+      }
+      else if (lastEnergyTimestamp !== null && lastEnergy !== null) {
+        const delta = event.timestamp - lastEnergyTimestamp;
+        const gainedEnergy = delta / 100;
+        eventEnergy = lastEnergy + gainedEnergy;
+      }
 
       switch (event.type) {
         case 'applybuff':
@@ -136,8 +164,6 @@ export class EventAnalyzer {
 
 
       const spellData = Spell.get(castId, this.analysis.settings, activeStats.totalHaste - 1, this.analysis.tierBonuses);
-      // console.log("currentCast", currentCast);
-      // console.log("spellData", spellData);
 
       const details = new CastDetails({
         castId,
@@ -155,7 +181,8 @@ export class EventAnalyzer {
         haste: activeStats!.totalHaste - 1,
         gcd: spellData.gcd ? activeStats!.gcd : 0,
         classResources: currentCast.classResources,
-        CP: currentCP
+        CP: currentCP,
+        energy: eventEnergy !== undefined ? eventEnergy as number : undefined,
       });
 
       // if (CPGenerators.includes(castId)) {
@@ -247,23 +274,23 @@ export class EventAnalyzer {
         case 'cast':
           cast = event as ICastData;
           spellData = Spell.baseData(mapSpellId(event.ability.guid));
-          if ((cast.ability.guid === SpellId.VAMPIRIC_TOUCH || cast.ability.guid === SpellId.MIND_BLAST) &&
-            cast.ability.guid === startingCast?.ability?.guid) {
+          // if ((cast.ability.guid === SpellId.VAMPIRIC_TOUCH || cast.ability.guid === SpellId.MIND_BLAST) &&
+          //   cast.ability.guid === startingCast?.ability?.guid) {
 
-            const castTime = (cast.timestamp - startingCast.timestamp) / 1000,
-              baseCastTime = spellData.baseCastTime / stats.totalHaste;
+          //   const castTime = (cast.timestamp - startingCast.timestamp) / 1000,
+          //     baseCastTime = spellData.baseCastTime / stats.totalHaste;
 
-            if (castTime <= baseCastTime) {
-              const inferredRating = HasteUtils.inferRating(stats.totalHaste, spellData.baseCastTime, castTime);
+          //   if (castTime <= baseCastTime) {
+          //     const inferredRating = HasteUtils.inferRating(stats.totalHaste, spellData.baseCastTime, castTime);
 
-              if (inferredRating > 0) {
-                totalHaste += inferredRating;
-                hasteCount++;
-              }
-            }
+          //     if (inferredRating > 0) {
+          //       totalHaste += inferredRating;
+          //       hasteCount++;
+          //     }
+          //   }
 
-            castCount++;
-          }
+          //   castCount++;
+          // }
       }
     }
 
@@ -350,9 +377,8 @@ export class EventAnalyzer {
     } else {
       this.buffs.push({ id: event.ability.guid, data, event });
       if (event.ability.guid == SpellId.ROAR) {
-        console.log("SR cast");
         const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
-        console.log(`${tsFormatted} :${event.timestamp} [${this.analysis.encounter.start}-${this.analysis.encounter.end}]`)
+        console.log(`SR cast ${tsFormatted}`)
         this.lastSavageRoar = event.timestamp;
       }
     }
@@ -362,9 +388,8 @@ export class EventAnalyzer {
     const index = this.buffs.findIndex((b) => b.id === event.ability.guid);
     if (index >= 0) {
       if (event.ability.guid == SpellId.ROAR) {
-        console.log("SR fade");
         const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
-        console.log(`${tsFormatted} :${event.timestamp} [${this.analysis.encounter.start}-${this.analysis.encounter.end}]`)
+        console.log(`SR fade ${tsFormatted}`)
         this.savageRoarDurationTotal += (event.timestamp - this.lastSavageRoar);
       }
       this.buffs.splice(index, 1);
@@ -423,7 +448,7 @@ export class EventAnalyzer {
       // cast on "Unknown Actor" in WCL. Try to infer the target first
       // look for a damage event around the time we should expect a hit for the spell
       // and infer the actual target from that instance, if found.
-      const delta = spellData.maxDuration > 0 ? (spellData.maxDuration / spellData.maxDamageInstances) * 1000 : spellData.damageType === DamageType.DIRECTAOE? 500 : 3000;
+      const delta = spellData.maxDuration > 0 ? (spellData.maxDuration / spellData.maxDamageInstances) * 1000 : spellData.damageType === DamageType.DIRECTAOE ? 500 : 3000;
       const firstDamageTimestamp = cast.castEnd + delta + EventAnalyzer.EVENT_LEEWAY;
       const firstInstance = damageEvents.find((e) =>
         this.matchDamage(cast, spellData, e, firstDamageTimestamp, true));
@@ -445,7 +470,7 @@ export class EventAnalyzer {
     } while (nextCast.timestamp <= maxDamageTimestamp + EventAnalyzer.EVENT_LEEWAY);
 
 
-    
+
     // Process damage instances for this spell within the window
     nextDamage = damageEvents[0];
     let count = 0;
@@ -453,9 +478,9 @@ export class EventAnalyzer {
 
     while (nextDamage && (!spellData.maxDamageInstances || count < spellData.maxDamageInstances)) {
       if (this.matchDamage(cast, spellData, nextDamage, maxDamageTimestamp)
-      && (cast.spellId != SpellId.RAKE || count == 0 || nextDamage.tick == true)) {
+        && (cast.spellId != SpellId.RAKE || count == 0 || nextDamage.tick == true)) {
         // Prevent rake from adding the next rake's initial hit
-        
+
         // This is a little complicated because of differences between channeled, dot, and AoE damage
         // Each individual damage instance for AoE can resist individually, so we just count them all without condition
         //
@@ -518,7 +543,7 @@ export class EventAnalyzer {
   // -- and the cast was not resisted (requires finding an associated damage instance)
   private castIsReplacement(cast: CastDetails, spellData: ISpellData, next: ICastData, events: IDamageData[]) {
     // check for matching target
-    
+
     if (next.type !== 'cast' || Spell.baseData(next.ability.guid).mainId !== cast.spellId ||
       next.targetID !== cast.targetId || next.targetInstance !== cast.targetInstance || spellData.damageType == DamageType.DIRECTAOE) {
       return false;
@@ -537,19 +562,8 @@ export class EventAnalyzer {
   }
 
   private failed(spellId: SpellId, event: IDamageData, count?: number) {
-    // resists always failed.
     if ([HitType.RESIST, HitType.MISS, HitType.DODGE, HitType.PARRY].includes(event.hitType) ||
       ([HitType.BLOCK, HitType.CRIT_BLOCK].includes(event.hitType) && event.amount === 0)) {
-      return true;
-    }
-
-    // ye old hack fix for DP
-    // TODO: Find a better solution for this.
-    if (spellId === SpellId.DEVOURING_PLAGUE &&
-      event.ability.guid !== SpellId.IMPROVED_DEVOURING_PLAGUE &&
-      count !== undefined &&
-      count < 2 &&
-      event.hitType === HitType.IMMUNE) {
       return true;
     }
 
@@ -570,11 +584,6 @@ export class EventAnalyzer {
     const leeway = (spellData.maxDamageInstances > 1 && spellData.damageType == DamageType.DOT) ?
       (spellData.maxDamageInstances * EventAnalyzer.EVENT_LEEWAY) :
       EventAnalyzer.EVENT_LEEWAY;
-
-    // if(next.ability.guid == SpellId.MAUL){
-    //   console.log('leeway', leeway);
-    //   console.log(`${next.timestamp} max: ${maxTimestamp}`)
-    // }
 
     if (next.timestamp < (cast.castEnd - EventAnalyzer.EVENT_LEEWAY) || next.timestamp > (maxTimestamp + leeway)) {
       return false;

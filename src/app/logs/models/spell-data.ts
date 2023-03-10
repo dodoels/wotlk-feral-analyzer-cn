@@ -30,6 +30,7 @@ export class Spell {
     dotHaste: false,
     statsByTick: false,
     multiTarget: false,
+    energyCost: 0,
   };
 
   public static baseData(id: SpellId) {
@@ -49,6 +50,14 @@ export class Spell {
     }
 
     return data;
+  }
+
+  public static energyCost(id: number, isBerserk: boolean, isClearcast: boolean): number {
+    if (!(id in SpellId) || (isClearcast && id != SpellId.ROAR))
+      return 0;
+    const baseCost = this.baseData(id).energyCost;
+    const cost = (baseCost / (isBerserk ? 2 : 1)) + (id == SpellId.BITE ? 30 : 0);
+    return cost;
   }
 
   public static rank(id: SpellId, data: ISpellData) {
@@ -99,12 +108,13 @@ export class Spell {
       maxDuration: 12,
       maxTicks: 6,
       baseTickTime: 2,
+      energyCost: 30,
       dynamic: (baseData, settings, tierBonuses) => ({
-        maxDuration: baseData.maxDuration + 
+        maxDuration: baseData.maxDuration +
           (tierBonuses?.tier7_2p ? 4 : 0) + (settings?.shredGlyphActive ? 6 : 0) + (settings?.ripGlyphActive ? 4 : 0),
-        maxDamageInstances: baseData.maxDamageInstances + 
+        maxDamageInstances: baseData.maxDamageInstances +
           (tierBonuses?.tier7_2p ? 2 : 0) + (settings?.shredGlyphActive ? 3 : 0) + (settings?.ripGlyphActive ? 2 : 0),
-        maxTicks: baseData.maxTicks + 
+        maxTicks: baseData.maxTicks +
           (tierBonuses?.tier7_2p ? 2 : 0) + (settings?.shredGlyphActive ? 3 : 0) + (settings?.ripGlyphActive ? 2 : 0),
       })
     }),
@@ -145,6 +155,7 @@ export class Spell {
       damageType: DamageType.DIRECTAOE,
       multiTarget: true,
       maxDuration: 0.5,
+      energyCost: 45
     }),
 
     [SpellId.SWIPE_BEAR]: data({
@@ -187,6 +198,7 @@ export class Spell {
       maxRank: 9,
       damageType: DamageType.DIRECT,
       maxDamageInstances: 1,
+      energyCost: 42,
     }),
 
     [SpellId.BITE]: data({
@@ -198,6 +210,7 @@ export class Spell {
       maxRank: 8,
       damageType: DamageType.DIRECT,
       maxDamageInstances: 1,
+      energyCost: 35,
     }),
 
     [SpellId.MANGLE_CAT]: data({
@@ -209,6 +222,7 @@ export class Spell {
       maxRank: 5,
       damageType: DamageType.DIRECT,
       maxDamageInstances: 1,
+      energyCost: 40,
     }),
 
     [SpellId.MANGLE_BEAR]: data({
@@ -225,6 +239,7 @@ export class Spell {
     [SpellId.ROAR]: data({
       maxRank: 1,
       damageType: DamageType.NONE,
+      energyCost: 25,
     }),
 
     [SpellId.TIGERS_FURY]: data({
@@ -235,7 +250,8 @@ export class Spell {
       },
       maxRank: 6,
       damageType: DamageType.NONE,
-      gcd: false
+      gcd: false,
+      energyCost: -60
     }),
 
     [SpellId.ENRAGE]: data({
@@ -298,7 +314,8 @@ export class Spell {
       maxDamageInstances: 4,
       maxDuration: 9,
       maxTicks: 3,
-      baseTickTime: 3
+      baseTickTime: 3,
+      energyCost: 35
     }),
 
     [SpellId.POUNCE]: data({
@@ -314,7 +331,8 @@ export class Spell {
       maxDuration: 18,
       maxTicks: 6,
       baseTickTime: 3,
-      damageIds: [SpellId.POUNCE_BLEED]
+      damageIds: [SpellId.POUNCE_BLEED],
+      energyCost: 50,
     }),
 
     [SpellId.MAIM]: data({
@@ -323,6 +341,7 @@ export class Spell {
         [22570]: 1
       },
       maxRank: 2,
+      energyCost: 35,
     }),
 
     [SpellId.RAVAGE]: data({
@@ -333,6 +352,7 @@ export class Spell {
         [48578]: 6
       },
       maxRank: 7,
+      energyCost: 60,
     }),
 
   }
@@ -371,4 +391,5 @@ export interface ISpellData {
   multiTarget: boolean;
   maxInstancesPerDamageId?: { [id: number]: number };
   dynamic?: (baseData: ISpellData, settings: ISettings, tierBonuses?: TierBonuses) => Partial<ISpellData>
+  energyCost: number;
 }

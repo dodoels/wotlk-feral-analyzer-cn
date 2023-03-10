@@ -139,7 +139,7 @@ export class ExportComponent implements OnInit {
         shadowPriest: {
           rotation: {
             rotationType: 'Ideal',
-            latency: Math.round((this.analysis.report.getSpellStats(SpellId.MIND_FLAY)?.avgNextCastLatency || 0.2) * 1000)
+            latency: 100//Math.round((this.analysis.report.getSpellStats(SpellId.MIND_FLAY)?.avgNextCastLatency || 0.2) * 1000)
           },
           talents: {},
           options: {
@@ -166,7 +166,7 @@ export class ExportComponent implements OnInit {
     }
 
     // Detect troll from 'zerkin
-    if (this.haveBuff(AuraId.BERSERKING)) {
+    if (this.haveBuff(AuraId.TROLL_BERSERKING)) {
       return 'Troll';
     }
 
@@ -263,13 +263,13 @@ export class ExportComponent implements OnInit {
       });
     }
 
-    const fiend = this.analysis.report.casts.find((c) => c.spellId === SpellId.SHADOW_FIEND);
-    if (fiend) {
-      cooldowns.push({
-        id: { spellId: SpellId.SHADOW_FIEND },
-        timings: [Math.round((fiend.castStart - this.analysis.encounter.start)/1000)]
-      });
-    }
+    // const fiend = this.analysis.report.casts.find((c) => c.spellId === SpellId.SHADOW_FIEND);
+    // if (fiend) {
+    //   cooldowns.push({
+    //     id: { spellId: SpellId.SHADOW_FIEND },
+    //     timings: [Math.round((fiend.castStart - this.analysis.encounter.start)/1000)]
+    //   });
+    // }
 
     const infusions = this.analysis.events.buffs
       .filter((b) => b.ability.guid === AuraId.POWER_INFUSION && b.type === 'applybuff');

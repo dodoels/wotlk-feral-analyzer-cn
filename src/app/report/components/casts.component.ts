@@ -152,7 +152,7 @@ export class CastsComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   expectHits(cast: CastDetails) {
-    return ([DamageType.DOT, DamageType.CHANNEL, DamageType.AOE, DamageType.DIRECTAOE].includes(Spell.baseData(cast.spellId).damageType));
+    return !cast.failed && ([DamageType.DOT, DamageType.CHANNEL, DamageType.AOE, DamageType.DIRECTAOE].includes(Spell.baseData(cast.spellId).damageType));
   }
 
   maxRank(cast: CastDetails) {

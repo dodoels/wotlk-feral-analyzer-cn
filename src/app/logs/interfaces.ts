@@ -2,7 +2,7 @@
  * WarcraftLogs API response interfaces
  */
 
- export interface IEncountersResponse {
+export interface IEncountersResponse {
   title: string;
   owner: string;
   friendlies: IActorData[];
@@ -50,6 +50,7 @@ export interface IEventData {
   targetID: number;
   targetInstance: number;
   read: boolean;
+  classResources?: Array<IClassResources>;
 }
 
 export interface ICastData extends IEventData {
@@ -59,7 +60,7 @@ export interface ICastData extends IEventData {
   spellPower: number;
   hitPoints: number;
   maxHitPoints: number;
-  classResources?: Array<any>;
+  classResources?: Array<IClassResources>;
 }
 
 export interface IDamageData extends IEventData {
@@ -74,7 +75,7 @@ export interface IDamageData extends IEventData {
   hitPoints: number;
 }
 
-export interface TierBonuses{
+export interface TierBonuses {
   tier7_2p: boolean
 }
 
@@ -101,6 +102,13 @@ export interface ICombatantData extends IEventData {
   hitSpell: number;
   gear: ICombatantItem[];
   auras: ICombatantAura[];
+}
+
+export interface IClassResources {
+  amount: number; 
+  max: number; 
+  type: number; 
+  cost?: number;
 }
 
 export interface ICombatantAura {

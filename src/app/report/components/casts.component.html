@@ -28,7 +28,7 @@
     </div>
 
     <div class="right">
-      <mat-button-toggle-group class="haste-toggle" appearance="legacy" (change)="onToggleHaste($event)">
+      <mat-button-toggle-group class="haste-toggle vis-hidden" appearance="legacy" (change)="onToggleHaste($event)">
         <mat-button-toggle value="power">Power</mat-button-toggle>
         <mat-button-toggle value="haste">Haste</mat-button-toggle>
       </mat-button-toggle-group>
@@ -50,7 +50,7 @@
           <span class="icon" [ngClass]="iconClass(cast)"></span>
           <span class="name spell-accent" [ngClass]="{ 'no-target': !cast.targetId }">{{ cast.name }}</span>
           <span class="target"> {{ targetName(cast.targetId, cast.targetInstance) }}</span>
-          <span class="percent"> {{ percent(cast) }} </span>
+          <span class="target-percent"> {{ percent(cast) }} </span>
         </mat-panel-title>
 
         <mat-panel-description >
@@ -75,10 +75,11 @@
             <span class="hits-label-abbrev">H: </span>
             <span [ngClass]="highlight.hits(cast)">{{ hits(cast) }}</span>
           </span>
-          <span class="power" *ngIf="cast.hasEnergy">Energy: <span class="table-accent">{{ cast.classResources? cast.classResources[0].amount : 0 }}</span></span>
+          <span class="power" *ngIf="cast.hasEnergy">Energy: <span class="table-accent">{{ cast.getEnergy }}</span></span>
+          <span class="power-abbrev" *ngIf="cast.hasEnergy">E: <span class="table-accent">{{ cast.getEnergy }}</span></span>
           <span class="power" *ngIf="cast.hasRage">Rage: <span class="table-accent">{{ cast.classResources? cast.classResources[0].amount / 10 : 0 }}</span></span>
-          <span class="haste" *ngIf="showHaste">Haste: <span class="table-accent">{{ haste(cast) }}</span></span>
-          <span class="power" *ngIf="!showHaste">AP: <span class="table-accent">{{ cast.spellPower }}</span></span>
+          <span class="haste" *ngIf="false"><!--showHaste">-->>Haste: <span class="table-accent">{{ haste(cast) }}</span></span>
+          <span class="power" *ngIf="false"><!--!showHaste">-->AP: <span class="table-accent">{{ cast.spellPower }}</span></span>
           <span [ngClass]="{'damage':true, 'vis-hidden':!isDamage(cast)}" *ngIf="!cast.failed">
             <span class="damage-label">Damage: </span>
             <span class="spell-accent" [ngClass]="{ 'crit': cast.crit }" *ngIf="!cast.failed"><span *ngIf="cast.crit">*</span>{{ cast.totalDamage }}<span *ngIf="cast.crit">*</span></span>

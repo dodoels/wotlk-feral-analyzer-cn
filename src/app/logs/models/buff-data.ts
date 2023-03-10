@@ -60,7 +60,7 @@ export class Buff {
       summaryIcon: true
     }),
 
-    [AuraId.BERSERKING]: buff({
+    [AuraId.TROLL_BERSERKING]: buff({
       haste: 0.2,
       trigger: BuffTrigger.ON_USE,
       summaryIcon: true
@@ -142,6 +142,21 @@ export class Buff {
     }),
 
     [AuraId.OOC_CLEARCASTING]: buff({
+      trigger: BuffTrigger.EXTERNAL,
+      summaryIcon: true
+    }),
+
+    [AuraId.FERAL_BERSERK]: buff({
+      trigger: BuffTrigger.CAST_END,
+      summaryIcon: true
+    }),
+
+    [AuraId.MJOLNIR_RUNESTONE]: buff({
+      trigger: BuffTrigger.EXTERNAL,
+      summaryIcon: true
+    }),
+
+    [AuraId.GRIM_TOLL]: buff({
       trigger: BuffTrigger.EXTERNAL,
       summaryIcon: true
     }),

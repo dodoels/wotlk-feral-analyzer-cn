@@ -8,98 +8,9 @@
   background-repeat: no-repeat;
   border-radius: 3px;
 
-  // VT
-  &.spell-48160, &.spell-vt {
-    background-image: url('/feral/assets/vt.jpg');
-  }
-
-  // SW:P
-  &.spell-48125, &.spell-swp {
-    background-image: url('/feral/assets/swp.jpg');
-  }
-
-  // Mind Blast
-  &.spell-48127, &.spell-mb {
-    background-image: url('/feral/assets/mb.jpg');
-  }
-
-  // Mind Flay
-  &.spell-48156, &.spell-flay {
-    background-image: url('/feral/assets/flay.jpg');
-  }
-
-  // SW: Death
-  &.spell-48158, &.spell-swd {
-    background-image: url('/feral/assets/swd.jpg');
-  }
-
-  // VE
-  &.spell-15286, &.spell-ve {
-    background-image: url('/feral/assets/ve.jpg');
-  }
-
-  // Shield
-  &.spell-48066, &.spell-shield {
-    background-image: url('/feral/assets/shield.jpg');
-  }
-
-  // Fade
-  &.spell-586, &.spell-fade {
-    background-image: url('/feral/assets/fade.jpg');
-  }
-
-  // Fear Ward
-  &.spell-6346, &.spell-fear-ward {
-    background-image: url('/feral/assets/ward.jpg');
-  }
-
-  // Shadow friend
-  &.spell-34433, &.spell-fiend {
-    background-image: url('/feral/assets/fiend.jpg');
-  }
-
-  // Devouring Plague
-  &.spell-48300, &.spell-dp {
-    background-image: url('/feral/assets/plague.jpg');
-  }
-
-  // Desperate prayer
-  &.spell-25437, &.spell-desperate-prayer {
-    background-image: url('/feral/assets/prayer.jpg');
-  }
-
   // Berserking
   &.spell-26297, &.spell-berserking {
     background-image: url('/feral/assets/berserking.jpg');
-  }
-
-  // Dispel Magic
-  &.spell-988, &.spell-dispel-magic {
-    background-image: url('/feral/assets/dispel.jpg');
-  }
-
-  &.spell-64843 {
-    background-image: url('/feral/assets/divinehymn.jpg');
-  }
-
-  &.spell-32375, &.spell-mass-dispel {
-    background-image: url('/feral/assets/massdispel.jpg');
-  }
-
-  &.spell-48078, &.spell-holy-nova {
-    background-image: url('/feral/assets/holynova.jpg');
-  }
-
-  &.spell-47585, &.spell-dispersion {
-    background-image: url('/feral/assets/dispersion.jpg');
-  }
-
-  &.spell-64901 {
-    background-image: url('/feral/assets/hope.jpg');
-  }
-
-  &.spell-53023, &.spell-mind-sear {
-    background-image: url('/feral/assets/mindsear.jpg');
   }
 
   &.spell-49803, &.spell-pounce {
@@ -233,6 +144,14 @@
 
   &.spell-16870, &.spell-clearcasting {
     background-image: url('/feral/assets/spell_shadow_manaburn.jpg');
+  }
+
+  &.spell-65019, &.spell-mjolnir-runestone {
+    background-image: url('/feral/assets/mjolnir_runestone.jpg');
+  }
+
+  &.spell-60437, &.spell-grimtoll {
+    background-image: url('/feral/assets/grimtoll.jpg');
   }
 
   &.spell-69369, &.spell-predatory-strikes {

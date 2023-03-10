@@ -106,7 +106,7 @@
       min-width: 75px;
     }
 
-    .cd-label, .hits-label-abbrev {
+    .cd-label, .hits-label-abbrev, &.power-abbrev {
       display: none;
     }
   }
@@ -228,6 +228,10 @@
           white-space: nowrap;
           text-overflow: ellipsis;
         }
+
+        &.target-percent {
+          display: none;
+        }
       }
     }
 
@@ -257,6 +261,11 @@
       }
 
       span.hits-label-abbrev, span.cd-label {
+        display: inline;
+      }
+
+      &.power-abbrev {
+        margin-left: 8px;
         display: inline;
       }
     }

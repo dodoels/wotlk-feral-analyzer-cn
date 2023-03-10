@@ -29,6 +29,7 @@ export class CastsAnalyzer {
       doInference = inferrableBuffs.length > 0;
 
     this.inferred = {};
+
     for (let i = 0; i < this.casts.length; i++) {
       const current = this.casts[i],
         spellData = Spell.get(current.spellId, this.analysis.settings, current.haste, this.analysis.tierBonuses);
