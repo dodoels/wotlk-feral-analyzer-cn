@@ -32,6 +32,7 @@ export class Spell {
     multiTarget: false,
     energyCost: 0,
     hasTravelTime: false,
+    hasInitialHit: false,
   };
 
   public static baseData(id: SpellId) {
@@ -183,9 +184,9 @@ export class Spell {
         [48479]: 9
       },
       maxRank: 10,
-      damageType: DamageType.AOE,
+      damageType: DamageType.DIRECTAOE,
       multiTarget: true,
-      maxDuration: 0.5,
+      maxDuration: 0.10,
       maxDamageInstances: 2,
       gcd: false
     }),
@@ -286,7 +287,8 @@ export class Spell {
       maxRank: 3,
       damageType: DamageType.DOT,
       baseTickTime: 3,
-      dotHaste: false
+      dotHaste: false,
+      hasInitialHit: true,
     }),
 
     [SpellId.SUPER_SAPPER]: data({
@@ -316,7 +318,8 @@ export class Spell {
       maxDuration: 9,
       maxTicks: 3,
       baseTickTime: 3,
-      energyCost: 35
+      energyCost: 35,
+      hasInitialHit: true,
     }),
 
     [SpellId.POUNCE]: data({
@@ -430,4 +433,5 @@ export interface ISpellData {
   maxInstancesPerDamageId?: { [id: number]: number };
   dynamic?: (baseData: ISpellData, settings: ISettings, tierBonuses?: TierBonuses) => Partial<ISpellData>
   energyCost: number;
+  hasInitialHit: boolean;
 }

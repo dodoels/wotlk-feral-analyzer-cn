@@ -36,9 +36,6 @@ export class EventAnalyzer {
   // tracks currently active buffs
   private buffs: IBuffEvent[] = [];
 
-  private lastSavageRoar: number;
-  public savageRoarDurationTotal: number;
-
   constructor(analysis: PlayerAnalysis) {
     this.analysis = analysis;
     this.baseStats = Object.assign({}, analysis.actorInfo.stats) as ActorStats;
@@ -48,7 +45,6 @@ export class EventAnalyzer {
     this.castData = analysis.events.casts;
     this.damageData = analysis.events.damage;
     this.deaths = analysis.events.deaths;
-    this.savageRoarDurationTotal = 0;
 
     // partition damage events by spell ID for association with casts
     this.initializeDamageBuckets();
@@ -226,18 +222,6 @@ export class EventAnalyzer {
       startingCast = activeStats = null;
     }
 
-    if (this.buffs.some(x => x.id == AuraId.SAVAGE_ROAR)) {
-      this.removeBuff({
-        type: "removebuff",
-        ability: { name: "Savage Roar", guid: AuraId.SAVAGE_ROAR },
-        timestamp: this.analysis.encounter.end,
-        read: true,
-        targetID: 0,
-        targetInstance: 0
-      });
-    }
-
-
     return casts;
   }
 
@@ -378,46 +362,15 @@ export class EventAnalyzer {
       existing.event = event;
     } else {
       this.buffs.push({ id: event.ability.guid, data, event });
-      if (event.ability.guid == SpellId.ROAR) {
-        const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
-        console.log(`SR cast ${tsFormatted}`)
-        this.lastSavageRoar = event.timestamp;
-      }
     }
   }
 
   private removeBuff(event: IBuffData) {
     const index = this.buffs.findIndex((b) => b.id === event.ability.guid);
     if (index >= 0) {
-      if (event.ability.guid == SpellId.ROAR) {
-        const tsFormatted = (event.timestamp - this.analysis.encounter.start) / 1000;
-        console.log(`SR fade ${tsFormatted}`)
-        this.savageRoarDurationTotal += (event.timestamp - this.lastSavageRoar);
-      }
       this.buffs.splice(index, 1);
     }
   }
-
-  // private setShadowfiendDamage(cast: CastDetails) {
-  //   const damageEvents = this.damageBySpell[SpellId.MELEE];
-  //   const maxDamageTimestamp =
-  //     cast.castEnd + (Spell.data[SpellId.SHADOW_FIEND].maxDuration * (1000 + EventAnalyzer.EVENT_LEEWAY));
-
-  //   let nextDamage = damageEvents[0];
-  //   let i = 0, instances: DamageInstance[] = [];
-
-  //   while (nextDamage && nextDamage.timestamp <= maxDamageTimestamp) {
-  //     const actor = this.analysis.getActor(cast.sourceId);
-  //     if (actor && !nextDamage.read && nextDamage.sourceID === actor.shadowFiendId) {
-  //       instances.push(new DamageInstance(nextDamage));
-  //       nextDamage.read = true;
-  //     }
-
-  //     nextDamage = damageEvents[++i];
-  //   }
-
-  //   cast.setInstances(instances);
-  // }
 
   private setDamage(cast: CastDetails, spellData: ISpellData) {
     if (this.damageBySpell.hasOwnProperty(cast.spellId)) {
@@ -480,8 +433,8 @@ export class EventAnalyzer {
 
     while (nextDamage && (!spellData.maxDamageInstances || count < spellData.maxDamageInstances)) {
       if (this.matchDamage(cast, spellData, nextDamage, maxDamageTimestamp)
-        && (cast.spellId != SpellId.RAKE || count == 0 || nextDamage.tick == true)) {
-        // Prevent rake from adding the next rake's initial hit
+        && (!spellData.hasInitialHit || count == 0 || nextDamage.tick == true)) {
+        // Prevent initial dot hits(rake/lacerate) from being applied to the previous application
 
         // This is a little complicated because of differences between channeled, dot, and AoE damage
         // Each individual damage instance for AoE can resist individually, so we just count them all without condition

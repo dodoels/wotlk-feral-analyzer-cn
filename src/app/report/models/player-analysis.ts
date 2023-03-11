@@ -16,6 +16,7 @@ import { Settings } from 'src/app/settings';
 import { EventPreprocessor } from 'src/app/report/analysis/event-preprocessor';
 import { Item } from 'src/app/logs/models/item-data';
 import { TierBonuses } from 'src/app/logs/interfaces';
+import { RoarAnalyzer } from '../analysis/savage-roar-analyzer';
 
 export class PlayerAnalysis {
   public log: LogSummary;
@@ -159,7 +160,10 @@ export class PlayerAnalysis {
     const eventAnalyzer = new EventAnalyzer(this);
     const casts = eventAnalyzer.createCasts();
     this.report = new CastsAnalyzer(this, casts).run();
-    this.savageRoarDuration = eventAnalyzer.savageRoarDurationTotal;
+
+    const roarAnalyzer = new RoarAnalyzer(this);
+    this.savageRoarDuration = roarAnalyzer.totalRoarUptime;
+    console.log(this.savageRoarDuration);
 
     // find total possible GCDs in encounter
     this.totalGcds = new GcdAnalyzer(this).totalGcds;

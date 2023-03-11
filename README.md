@@ -36,6 +36,12 @@ Special thanks to NerdEgghead for his theorycrafting and sim work, as well as al
 
 ### Changelog
 - March 9th, 2023
+  - Updated missing gear warning to be more specific about tier 7 2piece bonus possible incorrect values.
+  - Fixed an issue where savage roar duration was being doubled when gear didn't exist in log.
+  - Fixed an issue where lacerate and maul damage events were being applied to the wrong casts.
+  
+
+- March 9th, 2023
   - Initial support for Feral!
   - ** Known Issues **
     - If the 2 piece bonus for tier 7 cannot be inferred from the log(gear information may be missing), you may get incorrect values for rip ticks and damage. IE: it may show that you missed rip ticks when you did not, etc.
