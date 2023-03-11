@@ -76,11 +76,6 @@ export class EventAnalyzer {
 
     const casts: CastDetails[] = [];
 
-    let currentCP = 0;
-    const CPGenerators = [SpellId.RAKE, SpellId.MANGLE_CAT, SpellId.SHRED, SpellId.POUNCE, SpellId.RAVAGE];
-    const CPSpenders = [SpellId.RIP, SpellId.ROAR, SpellId.BITE, SpellId.MAIM];
-
-
 
     while (this.events.length > 0) {
       event = this.events.shift() as IEventData;
@@ -112,6 +107,7 @@ export class EventAnalyzer {
         const delta = event.timestamp - lastEnergyTimestamp;
         const gainedEnergy = delta / 100;
         eventEnergy = lastEnergy + gainedEnergy;
+        eventEnergy = Math.min(eventEnergy, 100);
       }
 
       switch (event.type) {
@@ -179,31 +175,9 @@ export class EventAnalyzer {
         haste: activeStats!.totalHaste - 1,
         gcd: spellData.gcd ? activeStats!.gcd : 0,
         classResources: currentCast.classResources,
-        CP: currentCP,
         energy: eventEnergy !== undefined ? eventEnergy as number : undefined,
       });
 
-      // if (CPGenerators.includes(castId)) {
-      //   const event = this.damageBySpell[castId].find((d) =>
-      //     this.matchDamage(details, spellData, d, details.castEnd, true));
-      //   if (event) {
-      //     if ([HitType.CRIT, HitType.CRIT_PARTIAL_RESIST].includes(event.hitType)) {
-      //       currentCP += 2;
-      //       // console.log("crit!CP+2", currentCP);
-      //     }
-      //     else if (![HitType.RESIST, HitType.IMMUNE, HitType.MISS, HitType.PARRY, HitType.DODGE].includes(event.hitType)) {
-      //       currentCP++;
-      //       // console.log("CP+1!", currentCP);
-      //     }
-      //   }
-      // }
-
-      // if (CPSpenders.includes(castId)) {
-      //   const event = this.damageBySpell[castId].find((d) =>
-      //     this.matchDamage(details, spellData, d, details.castEnd, true));
-      // }
-
-      // console.log(details);
 
       casts.push(details);
 
@@ -260,23 +234,23 @@ export class EventAnalyzer {
         case 'cast':
           cast = event as ICastData;
           spellData = Spell.baseData(mapSpellId(event.ability.guid));
-          // if ((cast.ability.guid === SpellId.VAMPIRIC_TOUCH || cast.ability.guid === SpellId.MIND_BLAST) &&
-          //   cast.ability.guid === startingCast?.ability?.guid) {
+        // if ((cast.ability.guid === SpellId.VAMPIRIC_TOUCH || cast.ability.guid === SpellId.MIND_BLAST) &&
+        //   cast.ability.guid === startingCast?.ability?.guid) {
 
-          //   const castTime = (cast.timestamp - startingCast.timestamp) / 1000,
-          //     baseCastTime = spellData.baseCastTime / stats.totalHaste;
+        //   const castTime = (cast.timestamp - startingCast.timestamp) / 1000,
+        //     baseCastTime = spellData.baseCastTime / stats.totalHaste;
 
-          //   if (castTime <= baseCastTime) {
-          //     const inferredRating = HasteUtils.inferRating(stats.totalHaste, spellData.baseCastTime, castTime);
+        //   if (castTime <= baseCastTime) {
+        //     const inferredRating = HasteUtils.inferRating(stats.totalHaste, spellData.baseCastTime, castTime);
 
-          //     if (inferredRating > 0) {
-          //       totalHaste += inferredRating;
-          //       hasteCount++;
-          //     }
-          //   }
+        //     if (inferredRating > 0) {
+        //       totalHaste += inferredRating;
+        //       hasteCount++;
+        //     }
+        //   }
 
-          //   castCount++;
-          // }
+        //   castCount++;
+        // }
       }
     }
 
@@ -534,7 +508,7 @@ export class EventAnalyzer {
       return false;
     }
 
-    if(spellData.mainId == SpellId.WRATH){
+    if (spellData.mainId == SpellId.WRATH) {
       console.log(next);
     }
 
@@ -542,10 +516,10 @@ export class EventAnalyzer {
     // for dots, allow EVENT_LEEWAY for each tick
     const leeway = (spellData.maxDamageInstances > 1 && spellData.damageType == DamageType.DOT) ?
       (spellData.maxDamageInstances * EventAnalyzer.EVENT_LEEWAY) :
-      EventAnalyzer.EVENT_LEEWAY + (spellData.hasTravelTime? EventAnalyzer.TRAVEL_TIME_LEEWAY : 0);
+      EventAnalyzer.EVENT_LEEWAY + (spellData.hasTravelTime ? EventAnalyzer.TRAVEL_TIME_LEEWAY : 0);
 
-    
-    
+
+
     if (next.timestamp < (cast.castEnd - EventAnalyzer.EVENT_LEEWAY) || next.timestamp > (maxTimestamp + leeway)) {
       return false;
     }

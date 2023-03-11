@@ -62,7 +62,7 @@ export class CastDetails {
   classResources?: Array<IClassResources>;
 
   // combo points
-  CP = 0;
+  CP?: number;
 
   gcd = 0;
   haste = 0;
@@ -178,6 +178,10 @@ export class CastDetails {
     return this.energy !== undefined ? Math.round(this.energy) : undefined;
   }
 
+  get hasCP() {
+    return this.CP !== undefined;
+  }
+
   get hasRage() {
     return this.classResources && this.classResources[0].type === 1;
   }
@@ -276,6 +280,6 @@ interface ICastDetailsParams {
   haste: number;
   gcd: number;
   buffs: IBuffDetails[];
-  CP: number;
+  CP?: number;
   energy: number | undefined;
 }
