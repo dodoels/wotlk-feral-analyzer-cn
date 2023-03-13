@@ -99,7 +99,7 @@
         <div class="cast-details" ngClass="toggle-{{hasteToggle.value}}">
           <div *ngIf="showCast(cast)">Cast Time: <span class="table-accent">{{ castTime(cast) }}s</span></div>
           <div class="haste" *ngIf="false">Haste: <span class="table-accent">{{ haste(cast) }}</span></div>
-          <div class="spellpower">Spellpower: <span class="table-accent">{{ cast.spellPower }}</span></div>
+          <div class="spellpower">Attack Power: <span class="table-accent">{{ cast.spellPower }}</span></div>
           <div *ngIf="isChannel(cast)">
             Delay:
             <span [ngClass]="highlight.channelLatency(cast)">{{ latency(cast.nextCastLatency) }}</span>
