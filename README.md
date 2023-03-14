@@ -35,6 +35,10 @@ Special thanks to NerdEgghead for his theorycrafting and sim work, as well as al
 
 
 ### Changelog
+- March 13, 2023
+  - Added Combo Point tracker
+  - Adjusted leeway for non-dot events
+
 - March 9th, 2023
   - Updated missing gear warning to be more specific about tier 7 2piece bonus possible incorrect values.
   - Fixed an issue where savage roar duration was being doubled when gear didn't exist in log.
