@@ -34,28 +34,11 @@ export enum SpellId {
   WRATH = 48461,
   STARFIRE = 48465,
   MOONFIRE = 48463,
+  RIP_AND_ROAR = -100,
 
 
   // Shadow Priest Abilities (Max Rank)
   BERSERKING = 26297,
-  // DEATH = 48158,
-  // DEVOURING_PLAGUE = 48300,
-  // DISPERSION = 47585,
-  // DIVINE_HYMN = 64843,
-  // FADE = 586,
-  // FEAR_WARD = 6346,
-  // HOLY_NOVA = 48078,
-  // HYMN_OF_HOPE = 64901,
-  // MIND_BLAST = 48127,
-  // MIND_FLAY = 48156,
-  // MIND_SEAR = 53023,
-  // PAIN = 48125,
-  // SHADOW_FIEND = 34433,
-  // SHIELD = 48066,
-  // VAMPIRIC_EMBRACE = 15286,
-  // VAMPIRIC_TOUCH = 48160,
-  // DISPEL_MAGIC = 988,
-  // MASS_DISPEL = 32375,
 
   // Related damage IDs
   IMPROVED_DEVOURING_PLAGUE = 63675,
