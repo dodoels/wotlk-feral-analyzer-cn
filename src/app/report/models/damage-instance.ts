@@ -43,7 +43,7 @@ export class DamageInstance {
   }
 
   get isCrit() {
-    return this.hitType === HitType.CRIT || this.hitType === HitType.CRIT_PARTIAL_RESIST;
+    return this.hitType === HitType.CRIT || this.hitType === HitType.CRIT_PARTIAL_RESIST || this.hitType === HitType.CRIT_BLOCK;
   }
 
   get partialSummary() {

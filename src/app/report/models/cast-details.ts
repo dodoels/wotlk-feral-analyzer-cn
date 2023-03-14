@@ -64,6 +64,8 @@ export class CastDetails {
   // combo points
   CP?: number;
 
+  CPchange?: number;
+
   gcd = 0;
   haste = 0;
 
@@ -174,6 +176,11 @@ export class CastDetails {
     return this.energy !== undefined;
   }
 
+  get hasCPChange(){
+    // we use != to test for both 0 and undefined
+    return this.CPchange != 0;
+  }
+
   get getEnergy() {
     return this.energy !== undefined ? Math.round(this.energy) : undefined;
   }
@@ -195,7 +202,8 @@ export class CastDetails {
   }
 
   get crit() {
-    return this.hitType === HitType.CRIT || this.hitType === HitType.CRIT_PARTIAL_RESIST;
+    return (this.spellId === SpellId.RAKE && this.instances.length > 0 && this.instances[0].isCrit) ||
+    this.hitType === HitType.CRIT || this.hitType === HitType.CRIT_PARTIAL_RESIST;
   }
 
   hasSameTarget(other: CastDetails) {

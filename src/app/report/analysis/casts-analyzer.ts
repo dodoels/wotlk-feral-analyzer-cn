@@ -108,6 +108,14 @@ export class CastsAnalyzer {
 
     switch (current.spellId) {
       case SpellId.RAKE:
+        if (current.totalDamage + current.totalAbsorbed + current.totalResisted > 0) {
+          if (current.instances.length > 0 && current.instances[0].isCrit) {
+            this.currentCP += 2;
+          } else {
+            this.currentCP++;
+          }
+        }
+        break;
       case SpellId.POUNCE:
       case SpellId.MANGLE_CAT:
       case SpellId.SHRED:
@@ -133,6 +141,8 @@ export class CastsAnalyzer {
     }
 
     this.currentCP = Math.min(5, this.currentCP);
+
+    current.CPchange = this.currentCP - current.CP;
   }
 
   private setCastLatency(current: CastDetails, spellData: ISpellData, index: number) {

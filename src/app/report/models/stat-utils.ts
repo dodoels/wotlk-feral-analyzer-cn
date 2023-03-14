@@ -1,7 +1,7 @@
 export const NO_VALUE = '---';
 
 export function duration(lengthMs: number, format = 'mm:ss.dd') {
-  const offset = lengthMs/1000;
+  const offset = lengthMs / 1000;
 
   let minutes = Math.floor(offset / 60),
     secondsFloat = offset - (minutes * 60),
@@ -29,17 +29,18 @@ export function duration(lengthMs: number, format = 'mm:ss.dd') {
   return out;
 }
 
-export function format(value: number|undefined, decimals = 1, suffix = '') {
+export function format(value: number | undefined, decimals = 1, suffix = '', showSign = false) {
   if (value === undefined || isNaN(value)) {
     return NO_VALUE;
   }
 
   const factor = 10 ** decimals;
   const result = Math.round(value * factor) / factor;
-  return result + (result === 0 ? '' : suffix);
+  return (showSign ? Math.sign(result) < 0 ? '-' : '+' : '') +
+    result + (result === 0 ? '' : suffix);
 }
 
-export function latency(value: number|undefined) {
+export function latency(value: number | undefined) {
   if (value === undefined || isNaN(value)) {
     return NO_VALUE;
   }
