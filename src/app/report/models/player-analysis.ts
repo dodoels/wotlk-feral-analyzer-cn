@@ -59,8 +59,6 @@ export class PlayerAnalysis {
     this.setTierBonuses();
 
     this.analyze();
-
-    console.log(actorInfo);
   }
 
   private setTierBonuses(){
@@ -159,11 +157,11 @@ export class PlayerAnalysis {
     // analyze events and generate casts report
     const eventAnalyzer = new EventAnalyzer(this);
     const casts = eventAnalyzer.createCasts();
+    eventAnalyzer.showUnreadEvents();
     this.report = new CastsAnalyzer(this, casts).run();
 
     const roarAnalyzer = new RoarAnalyzer(this);
     this.savageRoarDuration = roarAnalyzer.totalRoarUptime;
-    console.log(this.savageRoarDuration);
 
     // find total possible GCDs in encounter
     this.totalGcds = new GcdAnalyzer(this).totalGcds;

@@ -14,8 +14,10 @@ import { matchTarget } from 'src/app/report/analysis/utils';
 import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
 import { AuraId } from 'src/app/logs/models/aura-id.enum';
 import { ResourceType } from 'src/app/logs/models/resource-type.enum';
+import { duration } from '../models/stat-utils';
 
 export class EventAnalyzer {
+  public static DIRECT_EVENT_LEEWAY = 150; // in milliseconds. Allow damage to occur just slightly later than "should" be
   public static EVENT_LEEWAY = 100; // in milliseconds. Allow damage to occur just slightly later than "should" be
   // possible given strict debuff times. Blah blah server doesn't keep time exactly.
 
@@ -360,6 +362,19 @@ export class EventAnalyzer {
     }
   }
 
+  public showUnreadEvents() {
+    for (const sId in this.damageBySpell) {
+      if (sId == SpellId.MELEE.toString())
+        continue;
+      const arr = this.damageBySpell[sId];
+      arr.forEach(x => {
+        if (!x.read) {
+          console.log(x.ability.name, x);
+        }
+      });
+    }
+  }
+
   private setMultiInstanceDamage(cast: CastDetails) {
     const spellData = Spell.get(cast.spellId, this.analysis.settings, undefined, this.analysis.tierBonuses); // use base data for duration since haste can have errors
     let i = 0;
@@ -508,16 +523,12 @@ export class EventAnalyzer {
       return false;
     }
 
-    if (spellData.mainId == SpellId.WRATH) {
-      console.log(next);
-    }
 
     // damage must take place in the proper window
     // for dots, allow EVENT_LEEWAY for each tick
     const leeway = (spellData.maxDamageInstances > 1 && spellData.damageType == DamageType.DOT) ?
       (spellData.maxDamageInstances * EventAnalyzer.EVENT_LEEWAY) :
-      EventAnalyzer.EVENT_LEEWAY + (spellData.hasTravelTime ? EventAnalyzer.TRAVEL_TIME_LEEWAY : 0);
-
+      EventAnalyzer.DIRECT_EVENT_LEEWAY + (spellData.hasTravelTime ? EventAnalyzer.TRAVEL_TIME_LEEWAY : 0);
 
 
     if (next.timestamp < (cast.castEnd - EventAnalyzer.EVENT_LEEWAY) || next.timestamp > (maxTimestamp + leeway)) {

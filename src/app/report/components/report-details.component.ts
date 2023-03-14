@@ -259,8 +259,6 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
     const castCount = this.analysis?.report?.stats?.hasteErrorCastCount || 0;
     const inferTier7 = this.analysis.actorInfo.initFromLog == false ? this.analysis.tierBonuses.tier7_2p : undefined;
 
-    console.log(this.analysis.tierBonuses.tier7_2p);
-
     // eslint-disable-next-line no-console
     console.log(`Avg Haste Error: ${Math.round(hasteError * 10000) / 100}%; Cast Count: ${castCount}`);
 
