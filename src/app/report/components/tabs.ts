@@ -40,7 +40,8 @@ export const TabDefinitions: ITabDefinition[] = [
   // Tab.Roar
   {
     label: 'Rip/Roar',
-    icon: 'savage-roar',
+    // icon: 'savage-roar',
+    icon: 'rip-and-roar',
     spellId: SpellId.ROAR,
     summaryType: SavageRoarSummary
   },
