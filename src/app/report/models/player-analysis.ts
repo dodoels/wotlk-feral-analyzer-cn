@@ -160,7 +160,7 @@ export class PlayerAnalysis {
     eventAnalyzer.showUnreadEvents();
     this.report = new CastsAnalyzer(this, casts).run();
 
-    const roarAnalyzer = new RoarAnalyzer(this);
+    const roarAnalyzer = new RoarAnalyzer(this, casts);
     this.savageRoarDuration = roarAnalyzer.totalRoarUptime;
 
     // find total possible GCDs in encounter

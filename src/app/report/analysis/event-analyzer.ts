@@ -14,7 +14,7 @@ import { matchTarget } from 'src/app/report/analysis/utils';
 import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
 import { AuraId } from 'src/app/logs/models/aura-id.enum';
 import { ResourceType } from 'src/app/logs/models/resource-type.enum';
-import { duration } from '../models/stat-utils';
+import { duration, format } from '../models/stat-utils';
 
 export class EventAnalyzer {
   public static DIRECT_EVENT_LEEWAY = 150; // in milliseconds. Allow damage to occur just slightly later than "should" be
@@ -364,12 +364,14 @@ export class EventAnalyzer {
 
   public showUnreadEvents() {
     for (const sId in this.damageBySpell) {
-      if (sId == SpellId.MELEE.toString())
+      if (parseInt(sId) == SpellId.MELEE)
         continue;
       const arr = this.damageBySpell[sId];
       arr.forEach(x => {
         if (!x.read) {
-          console.log(x.ability.name, x);
+          console.log(
+            duration(x.timestamp - this.analysis.encounter.start),
+            x.ability.name, x);
         }
       });
     }

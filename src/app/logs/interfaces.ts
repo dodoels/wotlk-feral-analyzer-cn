@@ -85,6 +85,7 @@ export interface IDeathData extends IEventData {
 
 export interface IBuffData extends IEventData {
   type: 'applybuff' | 'removebuff' | 'refreshbuff';
+  duration?: number;
 }
 
 export interface IDebuffData extends IEventData {
