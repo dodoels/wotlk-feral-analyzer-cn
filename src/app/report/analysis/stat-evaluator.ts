@@ -2,6 +2,7 @@ import { CastDetails } from 'src/app/report/models/cast-details';
 import { DamageType, ISpellData, Spell } from 'src/app/logs/models/spell-data';
 import { CastStats } from 'src/app/report/models/cast-stats';
 import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
+import { SpellId } from 'src/app/logs/models/spell-id.enum';
 
 export enum Status {
   NORMAL,
@@ -173,6 +174,15 @@ export class StatEvaluator {
     // doesn't apply to mind sear (or channeled aoe in general)
     if (spellData.maxDamageInstances === 0) {
       return false;
+    }
+
+    if(cast.truncated){
+      if(cast.spellId == SpellId.RIP){
+        return cast.hits < 3;
+      }
+      if(cast.spellId == SpellId.RAKE){
+        return cast.hits < 4;
+      }
     }
 
     const hitPercent = cast.hits / spellData.maxDamageInstances;

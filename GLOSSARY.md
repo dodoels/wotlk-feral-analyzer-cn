@@ -142,5 +142,4 @@ in the server processing itself.
 
 ### Truncated
 
-If a DoT or Mind Flay is cut off early because the mob died, then the cast is marked as truncated. DoTs truncated with less than
-half of the expected ticks are flagged, as are Mind Flay casts with no ticks because the target died.
+If a DoT is cut off early because the mob died, then the cast is marked as truncated. Rake casts with less than 3 ticks are flagged, as well as Rip casts with less than 3 ticks.
