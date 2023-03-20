@@ -35,6 +35,10 @@ Special thanks to NerdEgghead for his theorycrafting and sim work, as well as al
 
 
 ### Changelog
+- March 19, 2023
+  - Changed SR tab to be a rip/SR tab
+
+
 - March 13, 2023
   - Added Combo Point tracker
   - Adjusted leeway for non-dot events

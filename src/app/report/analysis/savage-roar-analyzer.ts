@@ -3,6 +3,7 @@ import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
 import { AuraId } from 'src/app/logs/models/aura-id.enum';
 import { CastDetails } from '../models/cast-details';
 import { SpellId } from 'src/app/logs/models/spell-id.enum';
+import { duration } from '../models/stat-utils';
 
 export class RoarAnalyzer {
   private roarUptime: number;
@@ -54,11 +55,11 @@ export class RoarAnalyzer {
           roarActive = true;
           break;
         case 'refreshbuff':
-          roarDuration += this.GetRoarDuration(lastRoar, event.timestamp);
+          roarDuration += this.GetRoarDuration(lastRoar, event.timestamp, event);
           lastRoar = event;
           break;
         case 'removebuff':
-          roarDuration += this.GetRoarDuration(lastRoar, event.timestamp);
+          roarDuration += this.GetRoarDuration(lastRoar, event.timestamp, event);
           roarActive = false;
           break;
       }
@@ -67,7 +68,7 @@ export class RoarAnalyzer {
     }
 
     if (roarActive) {
-      roarDuration += this.GetRoarDuration(lastRoar, end);
+      roarDuration += this.GetRoarDuration(lastRoar, end, undefined);
     }
 
     this.roarUptime = roarDuration;
@@ -76,13 +77,17 @@ export class RoarAnalyzer {
     return this.roarUptime;
   }
 
-  private GetRoarDuration(lastRoar: IBuffData | undefined, end: number): number {
-    if (lastRoar === undefined)
+  private GetRoarDuration(lastRoar: IBuffData | undefined, end: number, event: any): number {
+    if (lastRoar === undefined) {
+      console.log("can't find starting roar");
       return 0;
-    const lastRoarCast = this.casts.find(x => x.castEnd == lastRoar.timestamp);
-    if(lastRoarCast == undefined){
-      console.log("i cant find my roar :(");
-      console.log(lastRoar);
+    }
+    const lastRoarCast = this.casts.find(x => Math.abs(x.castEnd - lastRoar.timestamp) < 100);
+    if (lastRoarCast == undefined) {
+      console.log("can't match roar cast with buff refresh/end");
+      console.log(event);
+      console.log(duration(lastRoar.timestamp - this.analysis.encounter.start), lastRoar.timestamp);
+      // console.log(this.casts);
     }
 
     const curRoarDuration = end - lastRoar.timestamp;
@@ -91,7 +96,4 @@ export class RoarAnalyzer {
   }
 }
 
-  // private canInferT8(IBuffData event): boolean {
-  //   if (ev`)
-  //   return true;
-  // }
+/// TODO: Infer t8 from roar duration

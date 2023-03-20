@@ -42,7 +42,7 @@ export const TabDefinitions: ITabDefinition[] = [
     label: 'Rip/Roar',
     // icon: 'savage-roar',
     icon: 'rip-and-roar',
-    spellId: SpellId.ROAR,
+    spellId: SpellId.RIP_AND_ROAR,
     summaryType: SavageRoarSummary
   },
 ];

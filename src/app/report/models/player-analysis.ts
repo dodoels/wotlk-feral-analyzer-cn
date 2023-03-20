@@ -96,7 +96,10 @@ export class PlayerAnalysis {
     return this.log.getActorName(targetId, targetInstance);
   }
 
-  stats(options: IStatsSearch): CastStats | undefined {
+  stats(options: IStatsSearch): CastStats {
+    if(options.spellId == SpellId.RIP_AND_ROAR){
+      return this.roarStats(options);
+    }
     let stats = options.spellId === SpellId.NONE ?
       this.report.stats :
       this.report.getSpellStats(options.spellId);
@@ -110,6 +113,24 @@ export class PlayerAnalysis {
     }
 
     return stats;
+  }
+
+  private roarStats(options: IStatsSearch): CastStats {
+    const roarStats = this.stats({
+      hitCount: options.hitCount,
+      spellId: SpellId.ROAR});
+    const ripStats = this.stats({
+      ...options,
+      spellId: SpellId.RIP
+    });
+
+    // const ripRoarStats = Object.assign({}, ripStats) as CastStats;
+
+    const ripRoarStats = new CastStats(this.report.analysis);
+
+    ripRoarStats.merge([ripStats, roarStats]);
+
+    return ripRoarStats;
   }
 
   hitCounts(options: IStatsSearch) {
@@ -173,6 +194,6 @@ export class PlayerAnalysis {
 
 export interface IStatsSearch {
   spellId: number;
-  targetId: number;
+  targetId?: number;
   hitCount: number;
 }
