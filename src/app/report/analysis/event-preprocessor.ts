@@ -222,7 +222,7 @@ export class EventPreprocessor {
         ability: event.ability,
         read: false
       });
-      
+
       // missing buffs might also be reflected in ActorStats, so update them.
       this.updateActorStats(event);
     }

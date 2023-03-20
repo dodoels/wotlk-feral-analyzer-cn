@@ -14,7 +14,7 @@ import { matchTarget } from 'src/app/report/analysis/utils';
 import { PlayerAnalysis } from 'src/app/report/models/player-analysis';
 import { AuraId } from 'src/app/logs/models/aura-id.enum';
 import { ResourceType } from 'src/app/logs/models/resource-type.enum';
-import { duration, format } from '../models/stat-utils';
+import { duration } from '../models/stat-utils';
 
 export class EventAnalyzer {
   public static DIRECT_EVENT_LEEWAY = 150; // in milliseconds. Allow damage to occur just slightly later than "should" be

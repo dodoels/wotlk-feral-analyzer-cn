@@ -87,7 +87,9 @@ export class RoarAnalyzer {
       console.log("can't match roar cast with buff refresh/end");
       console.log(event);
       console.log(duration(lastRoar.timestamp - this.analysis.encounter.start), lastRoar.timestamp);
-      // console.log(this.casts);
+    }
+    else {
+      //TODO: infer t8 bonus if possible
     }
 
     const curRoarDuration = end - lastRoar.timestamp;
