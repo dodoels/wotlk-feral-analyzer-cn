@@ -364,12 +364,14 @@ export class EventAnalyzer {
 
   public showUnreadEvents() {
     for (const sId in this.damageBySpell) {
-      if (sId == SpellId.MELEE.toString())
+      if (parseInt(sId) == SpellId.MELEE)
         continue;
       const arr = this.damageBySpell[sId];
       arr.forEach(x => {
         if (!x.read) {
-          console.log(x.ability.name, x);
+          console.log(
+            duration(x.timestamp - this.analysis.encounter.start),
+            x.ability.name, x);
         }
       });
     }
