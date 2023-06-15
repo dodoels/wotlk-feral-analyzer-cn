@@ -10,6 +10,7 @@ import { SpellId } from 'src/app/logs/models/spell-id.enum';
 import { CastStats } from 'src/app/report/models/cast-stats';
 import { RipFields } from './fields/rip.fields';
 import { RoarFields } from './fields/roar.fields';
+import { FeralFaerieFireFields } from './fields/fff.fields';
 
 /**
  * Display overall stats for all casts
@@ -20,6 +21,7 @@ export class TimelineSummary extends BaseSummary {
   private cooldownFields: CooldownFields;
   private channelFields: ChannelFields;
   private ripFields: RipFields;
+  private fffFields: FeralFaerieFireFields;
   private roarFields: RoarFields;
   private encounterFields: EncounterFields;
 
@@ -31,6 +33,7 @@ export class TimelineSummary extends BaseSummary {
     this.cooldownFields = new CooldownFields(this.analysis, this.highlight);
     this.channelFields = new ChannelFields(this.analysis, this.highlight);
     this.ripFields = new RipFields(this.analysis, this.highlight);
+    this.fffFields = new FeralFaerieFireFields(this.analysis, this.highlight);
     this.roarFields = new RoarFields(this.analysis, this.highlight);
     this.encounterFields = new EncounterFields(this.analysis, this.highlight);
   }
@@ -48,6 +51,7 @@ export class TimelineSummary extends BaseSummary {
       .concat(this.cooldownFields.fields(stats))
       .concat([this.break()])
       .concat(this.ripFields.fields(ripStats, true))
+      .concat(this.fffFields.fields(ripStats, true))
       .concat(this.roarFields.fields(ripStats, true))
       .concat(this.encounterFields.fields(stats));
   }

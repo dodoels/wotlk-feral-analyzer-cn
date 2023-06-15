@@ -17,6 +17,7 @@ import { EventPreprocessor } from 'src/app/report/analysis/event-preprocessor';
 import { Item } from 'src/app/logs/models/item-data';
 import { TierBonuses } from 'src/app/logs/interfaces';
 import { RoarAnalyzer } from '../analysis/savage-roar-analyzer';
+import { FeralFaerieFireAnalyzer } from '../analysis/feral-faerie-fire-analyzer';
 
 export class PlayerAnalysis {
   public log: LogSummary;
@@ -29,6 +30,7 @@ export class PlayerAnalysis {
   public report: Report;
   public totalGcds: number;
   public savageRoarDuration: number;
+  public feralFaerieFireCPM: number;
   public tierBonuses: TierBonuses;
 
   private _rawStats: ActorStats;
@@ -52,6 +54,7 @@ export class PlayerAnalysis {
     this.settings = settings;
     this.actorInfo = actorInfo;
     this.savageRoarDuration = 0;
+    this.feralFaerieFireCPM = 0;
 
     this._rawStats = actorInfo.stats;
     this._rawEvents = events;
@@ -183,6 +186,9 @@ export class PlayerAnalysis {
 
     const roarAnalyzer = new RoarAnalyzer(this, casts);
     this.savageRoarDuration = roarAnalyzer.totalRoarUptime;
+
+    const fffAnalyzer = new FeralFaerieFireAnalyzer(this, casts);
+    this.feralFaerieFireCPM = fffAnalyzer.feralFaerieFireCPM;
 
     // find total possible GCDs in encounter
     this.totalGcds = new GcdAnalyzer(this).totalGcds;

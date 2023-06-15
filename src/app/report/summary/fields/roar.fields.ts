@@ -8,6 +8,7 @@ export class RoarFields extends BaseFields {
     const spellLabel = forSummary ? ' Roar' : '';
 
     const uptime = 100 * this.analysis.savageRoarDuration / this.analysis.encounter.duration;
+    
 
     return [
       this.field({
