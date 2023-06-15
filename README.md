@@ -29,8 +29,8 @@ Definitions of stats/terms available via the [Glossary](GLOSSARY.md). -->
 
 ### Credits
 
-Almost the entirety of the underlying information about how to maximize performance as a feral druid comes from
-[druid discord](https://discord.gg/druidclassic).
+Almost the entirety of the underlying information about how to maximize performance as a feral druid comes from the 
+[Classic Druid Discord](https://discord.gg/druidclassic).
 Special thanks to NerdEgghead for his theorycrafting and sim work, as well as all other druid friends who have helped elevate cat play in the theorycrafting thread.
 
 
