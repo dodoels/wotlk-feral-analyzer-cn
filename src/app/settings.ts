@@ -4,11 +4,11 @@ export class Settings {
   public hasteRating: number|null = null;
   public improvedMindBlast = 5;
   public improvedMoonkinAura = true;
-  public tier7_2p = true;
-  public tier8_4p = true;
+  public tier7_2p = false;
+  public tier8_4p = false;
   public improvedRetAura = true;
   public wrathOfAir = true;
-  public ripGlyphActive = true;
+  public ripGlyphActive = false;
   public shredGlyphActive = true;
   public showMelees = false;
   public auras: number[] = [];
