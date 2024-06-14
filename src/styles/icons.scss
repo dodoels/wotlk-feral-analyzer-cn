@@ -182,11 +182,27 @@
     background-image: url('/feral/assets/natures_grasp.jpg');
   }
 
+  &.spell-5209, &.spell-challenging_roar {
+    background-image: url('/feral/assets/challenging_roar.jpg');
+  }
+
+  &.spell-16979, &.spell-feral_charge_bear {
+    background-image: url('/feral/assets/feral_charge_bear.jpg');
+  }
+
+  &.spell-22842, &.spell-frenzied_regeneration {
+    background-image: url('/feral/assets/frenzied_regeneration.jpg');
+  }
+
+  &.spell-6795, &.spell-growl {
+    background-image: url('/feral/assets/growl.jpg');
+  }
+
   &.spell-16857, &.spell-fff, &.spell-770 {
     background-image: url('/feral/assets/faerie_fire.jpg');
   }
 
-  &.spell-62078, &.spell-swipe, &.spell-48562 {
+  &.spell-62078, &.spell-swipe, &.spell-779 {
     background-image: url('/feral/assets/swipe.jpg');
   }
 
@@ -226,8 +242,20 @@
     background-image: url('/feral/assets/ripandroar.png');
   }
 
-  &.spell-48568, &.spell-lacerate {
+  &.spell-33745, &.spell-lacerate {
     background-image: url('/feral/assets/lacerate.jpg');
+  }
+
+  &.spell-22812, &.spell-barkskin {
+    background-image: url('/feral/assets/barkskin.jpg');
+  }
+
+  &.spell-80964, &.spell-skull_bash_bear {
+    background-image: url('/feral/assets/skull_bash_bear.jpg');
+  }
+
+  &.spell-80965, &.spell-skull_bash_cat {
+    background-image: url('/feral/assets/skull_bash_cat.jpg');
   }
 
   &.spell-48470, &.spell-gift-of-the-wild {
