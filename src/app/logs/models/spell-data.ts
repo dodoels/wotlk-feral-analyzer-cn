@@ -79,15 +79,127 @@ export class Spell {
   }
 
   public static data: { [spellId: number]: ISpellData } = {
+
+    // FORMS
+    [SpellId.BEAR_FORM]: data({
+      damageType: DamageType.NONE
+    }),
+
+    [SpellId.CAT_FORM]: data({
+      damageType: DamageType.NONE
+    }),
+
+    [SpellId.TRAVEL_FORM]: data({
+      damageType: DamageType.NONE
+    }),
+
+    // ABILITIES AVAILABLE IN ALL FORMS
+    [SpellId.BARKSKIN]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    [SpellId.TROLL_BERSERKING]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    [SpellId.FERAL_BERSERK]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    // BEAR FORM ABILITIES
+    [SpellId.BASH]: data({
+      damageType: DamageType.NONE,
+    }),
+
+    [SpellId.CHALLENGING_ROAR]: data({
+      damageType: DamageType.NONE,
+    }),
+    
+    [SpellId.ENRAGE]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+    
+    [SpellId.FERAL_CHARGE_BEAR]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+    
+    [SpellId.FRENZIED_REGENERATION]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    [SpellId.FAERIE_FIRE_FERAL]: data({
+      damageType: DamageType.DIRECT,
+      damageIds: [SpellId.FAERIE_FIRE_FERAL_DMG]
+    }),
+    
+    [SpellId.GROWL]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    // FURY_SWIPES NOT IMPLEMENTED HERE
+    // SEEMS LIKE TOO MUCH NOISE
+
+    [SpellId.LACERATE]: data({
+      damageType: DamageType.DOT,
+      baseTickTime: 3,
+      dotHaste: false,
+      hasInitialHit: true,
+    }),
+
+    [SpellId.MANGLE_BEAR]: data({
+      damageType: DamageType.DIRECTAOE,
+      maxDamageInstances: 3,
+    }),
+
+    [SpellId.MAUL]: data({
+      damageType: DamageType.DIRECTAOE,
+      multiTarget: true,
+      maxDuration: 0.10,
+      maxDamageInstances: 2,
+      gcd: false
+    }),
+
+    [SpellId.PULVERIZE]: data({
+      damageType: DamageType.DIRECT,
+      maxDamageInstances: 1,
+    }),
+
+    [SpellId.SKULL_BASH_BEAR]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    [SpellId.STAMPEDING_ROAR_BEAR]: data({
+      damageType: DamageType.NONE,
+      gcd: false
+    }),
+
+    /// TODO: FIX THIS SPELL'S DAMAGE INSTANCES
+    [SpellId.THRASH]: data({
+      damageType: DamageType.DIRECTAOE,
+      multiTarget: true,
+      maxDuration: 0.10,
+      maxDamageInstances: 2,
+      gcd: false
+    }),
+
+    [SpellId.SWIPE_BEAR]: data({
+      damageType: DamageType.DIRECTAOE,
+      maxDuration: 0.5,
+      multiTarget: true,
+    }),
+
     [SpellId.ADAMANTITE_GRENADE]: data({
       damageType: DamageType.AOE,
       baseCastTime: 1,
       maxDamageInstances: 20,
-      gcd: false
-    }),
-
-    [SpellId.BERSERKING]: data({
-      damageType: DamageType.NONE,
       gcd: false
     }),
 
@@ -99,12 +211,6 @@ export class Spell {
     }),
 
     [SpellId.RIP]: data({
-      rankIds: {
-        [9896]: 6,
-        [27008]: 7,
-        [49799]: 8
-      },
-      maxRank: 9,
       damageType: DamageType.DOT,
       maxDamageInstances: 6,
       maxDuration: 12,
@@ -123,11 +229,6 @@ export class Spell {
 
     [SpellId.NATURES_GRASP]: data({
       damageType: DamageType.NONE
-    }),
-
-    [SpellId.FAERIE_FIRE_FERAL]: data({
-      damageType: DamageType.DIRECT,
-      damageIds: [SpellId.FAERIE_FIRE_FERAL_DMG]
     }),
 
     [SpellId.FAERIE_FIRE]: data({
@@ -160,135 +261,42 @@ export class Spell {
       energyCost: 45
     }),
 
-    [SpellId.SWIPE_BEAR]: data({
-      damageType: DamageType.DIRECTAOE,
-      rankIds: {
-        [9908]: 5,
-        [26997]: 6,
-        [48561]: 7
-      },
-      maxDuration: 0.5,
-      maxRank: 8,
-      multiTarget: true,
-    }),
-
     [SpellId.MELEE]: data({
       damageType: DamageType.DIRECT,
       gcd: false
     }),
 
-    [SpellId.MAUL]: data({
-      rankIds: {
-        [9881]: 7,
-        [26996]: 8,
-        [48479]: 9
-      },
-      maxRank: 10,
-      damageType: DamageType.DIRECTAOE,
-      multiTarget: true,
-      maxDuration: 0.10,
-      maxDamageInstances: 2,
-      gcd: false
-    }),
-
     [SpellId.SHRED]: data({
-      rankIds: {
-        [27001]: 6,
-        [27002]: 7,
-        [48571]: 8
-      },
-      maxRank: 9,
       damageType: DamageType.DIRECT,
       maxDamageInstances: 1,
       energyCost: 42,
     }),
 
     [SpellId.BITE]: data({
-      rankIds: {
-        [31018]: 5,
-        [24248]: 6,
-        [48576]: 7
-      },
-      maxRank: 8,
       damageType: DamageType.DIRECT,
       maxDamageInstances: 1,
       energyCost: 35,
     }),
 
     [SpellId.MANGLE_CAT]: data({
-      rankIds: {
-        [33982]: 2,
-        [33983]: 3,
-        [48565]: 4
-      },
-      maxRank: 5,
       damageType: DamageType.DIRECT,
       maxDamageInstances: 1,
       energyCost: 40,
     }),
 
-    [SpellId.MANGLE_BEAR]: data({
-      rankIds: {
-        [33986]: 2,
-        [33987]: 3,
-        [48563]: 4
-      },
-      maxRank: 5,
-      damageType: DamageType.DIRECT,
-      maxDamageInstances: 1,
-    }),
-
     [SpellId.ROAR]: data({
-      maxRank: 1,
       damageType: DamageType.NONE,
       energyCost: 25,
     }),
 
     [SpellId.TIGERS_FURY]: data({
-      rankIds: {
-        [9845]: 3,
-        [9846]: 4,
-        [50212]: 5
-      },
-      maxRank: 6,
       damageType: DamageType.NONE,
       gcd: false,
       energyCost: -60
     }),
 
-    [SpellId.ENRAGE]: data({
-      damageType: DamageType.NONE,
-      gcd: false
-    }),
-
-    [SpellId.FERAL_BERSERK]: data({
-      damageType: DamageType.NONE,
-    }),
-
     [SpellId.INNERVATE]: data({
       damageType: DamageType.NONE,
-    }),
-
-    [SpellId.GOTW]: data({
-      rankIds: {
-        [21849]: 1,
-        [21850]: 2,
-        [26991]: 3
-      },
-      maxRank: 4,
-      damageType: DamageType.NONE,
-    }),
-
-    [SpellId.LACERATE]: data({
-      rankIds: {
-        [33745]: 1,
-        [48567]: 2
-      },
-      maxRank: 3,
-      damageType: DamageType.DOT,
-      baseTickTime: 3,
-      dotHaste: false,
-      hasInitialHit: true,
     }),
 
     [SpellId.SUPER_SAPPER]: data({
@@ -297,22 +305,8 @@ export class Spell {
       gcd: false
     }),
 
-    [SpellId.DIRE_BEAR_FORM]: data({
-      damageType: DamageType.NONE
-    }),
-
-    [SpellId.CAT_FORM]: data({
-      damageType: DamageType.NONE
-    }),
-
     [SpellId.RAKE]: data({
       damageType: DamageType.DOT,
-      rankIds: {
-        [9904]: 4,
-        [27003]: 5,
-        [48573]: 6
-      },
-      maxRank: 7,
       dotHaste: false,
       maxDamageInstances: 4,
       maxDuration: 9,
@@ -324,12 +318,6 @@ export class Spell {
 
     [SpellId.POUNCE]: data({
       damageType: DamageType.DOT,
-      rankIds: {
-        [9904]: 2,
-        [27003]: 3,
-        [48573]: 4
-      },
-      maxRank: 5,
       dotHaste: false,
       maxDamageInstances: 6,
       maxDuration: 18,
@@ -341,57 +329,26 @@ export class Spell {
 
     [SpellId.MAIM]: data({
       damageType: DamageType.DIRECT,
-      rankIds: {
-        [22570]: 1
-      },
-      maxRank: 2,
       energyCost: 35,
     }),
 
     [SpellId.WRATH]: data({
       damageType: DamageType.DIRECT,
-      rankIds: {
-        [9912]: 8,
-        [26984]: 9,
-        [26985]: 10,
-        [48459]: 11,
-      },
       baseCastTime:2,
-      maxRank: 12,
       hasTravelTime: true,
     }),
 
     [SpellId.STARFIRE]: data({
       damageType: DamageType.DIRECT,
-      rankIds: {
-        [9876]: 6,
-        [25298]: 7,
-        [26986]: 8,
-        [48464]: 9,
-      },
       baseCastTime: 3.5,
-      maxRank: 10,
     }),
 
     [SpellId.MOONFIRE]: data({
       damageType: DamageType.DOT,
-      rankIds: {
-        [9835]: 10,
-        [26987]: 11,
-        [26988]: 12,
-        [48462]: 13,
-      },
-      maxRank: 14,
     }),
 
     [SpellId.RAVAGE]: data({
       damageType: DamageType.DIRECT,
-      rankIds: {
-        [9867]: 4,
-        [27005]: 5,
-        [48578]: 6
-      },
-      maxRank: 7,
       energyCost: 60,
     }),
 

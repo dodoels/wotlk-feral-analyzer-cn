@@ -1,4 +1,4 @@
-# Wrath Feral Druid Log Analyzer
+# (IN PROGRESS) Cataclysm Feral Druid Log Analyzer
 
 To build and run locally, you'll either need [Angular CLI](https://github.com/angular/angular-cli) (built with v14.2.2)
 or [Yarn](https://yarnpkg.com/). If you're familiar with ng-cli commands, you can use those.
@@ -17,7 +17,7 @@ https://korbrawr.github.io/feral
 
 ### Gameplay Basics
 
-For more information, or for questions about feral druid gameplay, check out #wotlk-feral-dps in [druid discord](https://discord.gg/classicdruid).
+For more information, or for questions about feral druid gameplay, check out #cata-feral-dps in [druid discord](https://discord.gg/classicdruid).
 
 <!-- ### Configuration Settings
 

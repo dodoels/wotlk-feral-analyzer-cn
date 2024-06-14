@@ -9,7 +9,7 @@
   border-radius: 3px;
 
   // Berserking
-  &.spell-26297, &.spell-berserking {
+  &.spell-26297, &.spell-troll-berserking {
     background-image: url('/feral/assets/berserking.jpg');
   }
 
@@ -210,7 +210,7 @@
     background-image: url('/feral/assets/cat_form.jpg');
   }
 
-  &.spell-9634, &.spell-bear_form {
+  &.spell-5487, &.spell-bear_form {
     background-image: url('/feral/assets/bear_form.jpg');
   }
 
