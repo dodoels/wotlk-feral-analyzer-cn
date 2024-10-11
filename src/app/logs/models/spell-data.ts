@@ -155,7 +155,6 @@ export class Spell {
 
     [SpellId.MANGLE_BEAR]: data({
       damageType: DamageType.DIRECTAOE,
-      maxDuration: 0.10,
       maxDamageInstances: 3,
     }),
 
