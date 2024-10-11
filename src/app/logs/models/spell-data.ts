@@ -185,7 +185,9 @@ export class Spell {
     [SpellId.THRASH]: data({
       damageType: DamageType.DIRECTAOE,
       multiTarget: true,
-      maxDuration: 6,
+      maxDuration: 0.10,
+      maxDamageInstances: 2,
+      gcd: false
     }),
 
     [SpellId.SWIPE_BEAR]: data({
@@ -346,11 +348,6 @@ export class Spell {
     }),
 
     [SpellId.RAVAGE]: data({
-      damageType: DamageType.DIRECT,
-      energyCost: 60,
-    }),
-
-    [SpellId.RAVAGE_STAMPEDE]: data({
       damageType: DamageType.DIRECT,
       energyCost: 60,
     }),
