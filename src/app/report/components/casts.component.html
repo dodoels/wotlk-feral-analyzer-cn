@@ -2,14 +2,14 @@
   <section class="toolbar">
     <div class="filters">
       <mat-form-field class="fill" appearance="standard" *ngIf="filterSpells">
-        <mat-label>Filter Spells</mat-label>
+        <mat-label>过滤技能</mat-label>
         <mat-select [formControl]="spellFilter" multiple>
           <mat-select-trigger>
             <ng-container *ngIf="spellFilter.value && spellFilter.value.length < 3">
               {{ getSpellNames(spellFilter.value) }}
             </ng-container>
             <ng-container *ngIf="spellFilter.value?.length >= 3 && spellFilter.value?.length !== spells.length">
-              {{ spellFilter.value.length }} spells
+              {{ spellFilter.value.length }} 技能
             </ng-container>
           </mat-select-trigger>
           <mat-option *ngFor="let option of spells" [value]="option.id">
@@ -19,9 +19,9 @@
       </mat-form-field>
 
       <mat-form-field class="fill" appearance="standard" *ngIf="showStatsByHitCount">
-        <mat-label>Filter Hits</mat-label>
+        <mat-label>过滤命中</mat-label>
         <mat-select [formControl]="hitCount">
-          <mat-option value="-1">All Casts</mat-option>
+          <mat-option value="-1">所有施法</mat-option>
           <mat-option *ngFor="let option of hitCounts" [value]="option">{{option}}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -30,14 +30,14 @@
     <div class="right">
       <mat-button-toggle-group class="haste-toggle vis-hidden" appearance="legacy" (change)="onToggleHaste($event)">
         <mat-button-toggle value="power">Power</mat-button-toggle>
-        <mat-button-toggle value="haste">Haste</mat-button-toggle>
+        <mat-button-toggle value="haste">急速</mat-button-toggle>
       </mat-button-toggle-group>
-      <a class="navigation settings" routerLink="settings" matTooltip="Open Settings" matTooltipClass="tooltip" [matTooltipShowDelay]="200">
+      <!-- <a class="navigation settings" routerLink="settings" matTooltip="Open Settings" matTooltipClass="tooltip" [matTooltipShowDelay]="200">
         <mat-icon aria-hidden="false" fontIcon="settings"></mat-icon>
       </a>
       <a class="navigation export" routerLink="export" matTooltip="Sim Export" matTooltipClass="tooltip" [matTooltipShowDelay]="200">
         <mat-icon aria-hidden="false" fontIcon="open_in_new"></mat-icon>
-      </a>
+      </a> -->
     </div>
   </section>
 
@@ -61,46 +61,46 @@
             </span>
           </span>
           <span class="downtime" *ngIf="spellId && isDot(cast)">
-            <span class="downtime-label">Downtime: </span>
+            <span class="downtime-label">断覆盖时间: </span>
             <span [ngClass]="highlight.dotDowntime(cast)">{{ format(cast.dotDowntime) }}</span>
           </span>
           <span class="cooldown" *ngIf="spellId && hasCooldown(cast)">
-            <span class="downtime-label">Downtime: </span>
+            <span class="downtime-label">断覆盖时间: </span>
             <span class="cd-label">CD: </span>
             <span class="table-accent">{{ format(cast.timeOffCooldown) }}</span>
           </span>
 
           <span class="hits" *ngIf="expectHits(cast)" [ngClass]="{ 'failed': cast.failed }">
-            <span class="hits-label">Hits: </span>
-            <span class="hits-label-abbrev">H: </span>
+            <span class="hits-label">命中: </span>
+            <span class="hits-label-abbrev">命中: </span>
             <span [ngClass]="highlight.hits(cast)">{{ hits(cast) }}</span>
           </span>
-          <span class="power" *ngIf="cast.hasCP">CP: <span class="table-accent">{{ cast.CP }}<span *ngIf="cast.hasCPChange"> ({{ format(cast.CPchange, 0, '', true)}})</span></span></span>
-          <span class="power" *ngIf="cast.hasEnergy">Energy: <span class="table-accent">{{ cast.getEnergy }}</span></span>
-          <span class="power-abbrev" *ngIf="cast.hasEnergy">E: <span class="table-accent">{{ cast.getEnergy }}</span></span>
-          <span class="power" *ngIf="cast.hasRage">Rage: <span class="table-accent">{{ cast.classResources? cast.classResources[0].amount / 10 : 0 }}</span></span>
-          <span class="haste" *ngIf="false"><!--showHaste">-->>Haste: <span class="table-accent">{{ haste(cast) }}</span></span>
+          <span class="power" *ngIf="cast.hasCP">星: <span class="table-accent">{{ cast.CP }}<span *ngIf="cast.hasCPChange"> ({{ format(cast.CPchange, 0, '', true)}})</span></span></span>
+          <span class="power" *ngIf="cast.hasEnergy">能量: <span class="table-accent">{{ cast.getEnergy }}</span></span>
+          <span class="power-abbrev" *ngIf="cast.hasEnergy">能量: <span class="table-accent">{{ cast.getEnergy }}</span></span>
+          <span class="power" *ngIf="cast.hasRage">怒气: <span class="table-accent">{{ cast.classResources? cast.classResources[0].amount / 10 : 0 }}</span></span>
+          <span class="haste" *ngIf="false"><!--showHaste">-->>急速: <span class="table-accent">{{ haste(cast) }}</span></span>
           <span class="power" *ngIf="false"><!--!showHaste">-->AP: <span class="table-accent">{{ cast.spellPower }}</span></span>
           <span [ngClass]="{'damage':true, 'vis-hidden':!isDamage(cast)}" *ngIf="!cast.failed">
-            <span *ngIf="cast.crit" class="damage-label">*Critical: </span>
-            <span *ngIf="!cast.crit" class="damage-label">Damage: </span>
+            <span *ngIf="cast.crit" class="damage-label">*暴击: </span>
+            <span *ngIf="!cast.crit" class="damage-label">伤害: </span>
             <span class="spell-accent" [ngClass]="{ 'crit': cast.crit }" *ngIf="!cast.failed">{{ cast.totalDamage }}</span>
           </span>
           <span [ngClass]="{'damage':true, 'vis-hidden':!isDamage(cast)}" *ngIf="cast.failed">
-            <span class="damage-label">Failed: </span>
+            <span class="damage-label">失败: </span>
             <span *ngIf="cast.failed" class="spell-accent">{{ cast.failType }}</span>
           </span>
-          <span class="damage" *ngIf="cast.resisted"><span class="text-warning">Resisted</span></span>
-          <span class="damage" *ngIf="cast.immune"><span class="text-warning">Immune</span></span>
+          <span class="damage" *ngIf="cast.resisted"><span class="text-warning">抵抗</span></span>
+          <span class="damage" *ngIf="cast.immune"><span class="text-warning">免疫</span></span>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
       <ng-template matExpansionPanelContent>
         <span class="cast-status" [ngClass]="highlight.overall(cast)"></span>
         <div class="cast-details" ngClass="toggle-{{hasteToggle.value}}">
-          <div *ngIf="showCast(cast)">Cast Time: <span class="table-accent">{{ castTime(cast) }}s</span></div>
-          <div class="haste" *ngIf="false">Haste: <span class="table-accent">{{ haste(cast) }}</span></div>
-          <div class="spellpower">Attack Power: <span class="table-accent">{{ cast.spellPower }}</span></div>
+          <div *ngIf="showCast(cast)">施法时间: <span class="table-accent">{{ castTime(cast) }}s</span></div>
+          <div class="haste" *ngIf="false">急速: <span class="table-accent">{{ haste(cast) }}</span></div>
+          <div class="spellpower">攻强: <span class="table-accent">{{ cast.spellPower }}</span></div>
           <div *ngIf="isChannel(cast)">
             Delay:
             <span [ngClass]="highlight.channelLatency(cast)">{{ latency(cast.nextCastLatency) }}</span>
@@ -142,7 +142,7 @@
         </div>
 
         <div class="instances" *ngIf="cast.instances.length > 0">
-          Hits:
+          命中:
           <div class="instance" *ngFor="let instance of cast.instances">
             <span class="timestamp table-accent">{{ offsetTime(instance.timestamp) }}</span>
             <span class="target">{{ targetName(instance.targetId, instance.targetInstance) }}</span>

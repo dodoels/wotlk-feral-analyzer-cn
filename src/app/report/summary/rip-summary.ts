@@ -7,7 +7,7 @@ import { EncounterFields } from 'src/app/report/summary/fields/encounter.fields'
 import { HitFields } from 'src/app/report/summary/fields/hit.fields';
 import { CastStats } from 'src/app/report/models/cast-stats';
 
-export class DevouringPlagueSummary extends BaseSummary {
+export class RipSummary extends BaseSummary {
   private summaryFields: SummaryFields;
   private hitFields: HitFields;
   private dotFields: DotFields;

@@ -5,14 +5,14 @@ import { CastStats } from 'src/app/report/models/cast-stats';
 
 export class RoarFields extends BaseFields {
   fields(stats: CastStats, forSummary = false) {
-    const spellLabel = forSummary ? ' Roar' : '';
+    const spellLabel = forSummary ? '野蛮咆哮' : '';
 
     const uptime = 100 * this.analysis.savageRoarDuration / this.analysis.encounter.duration;
-    
+
 
     return [
       this.field({
-        label: `${spellLabel} Uptime`,
+        label: `${spellLabel}覆盖率`,
         value: format(uptime, 2, '%'),
         highlight: this.highlight.uptime(uptime)
       }),

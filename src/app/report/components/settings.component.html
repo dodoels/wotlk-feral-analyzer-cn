@@ -1,22 +1,22 @@
 <section class="settings" *ngIf="!!form">
   <div class="header">
-    <h3>Settings</h3>
+    <h3>设置</h3>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="apply($event)">
-    
+
     <div class="slide-toggle">
-      <mat-slide-toggle color="primary" formControlName="showMelees">Show Melee attacks</mat-slide-toggle>
-      <p class="mat-hint table-accent">Shows melee attacks.</p>
+      <mat-slide-toggle color="primary" formControlName="showMelees">显示平砍</mat-slide-toggle>
+      <p class="mat-hint table-accent">显示平砍数据.</p>
     </div>
 
-    <h4>Player Info</h4>
+    <!-- <h4>角色设置</h4>
     <div>
 
-      
+
 
       <mat-form-field class="fill" appearance="standard">
-        <mat-label>Gear Haste Rating</mat-label>
+        <mat-label>急速等级</mat-label>
         <input type="number" formControlName="hasteRating" matInput [min]="0" [max]="2000"/>
         <mat-hint class="table-accent" *ngIf="form.controls.hasteRating.disabled">
           Set from summary information in the log.
@@ -30,38 +30,38 @@
           Set a value between 0 and 2000.
         </mat-error>
       </mat-form-field>
-    </div>
+    </div> -->
 
-    <div class="slide-toggle">
+    <!-- <div class="slide-toggle">
       <mat-slide-toggle color="primary" formControlName="tier7_2p">Feral Tier 7 2-piece bonus</mat-slide-toggle>
       <p class="mat-hint table-accent">Rip lasts an additional 4 seconds.</p>
       <mat-hint class="table-accent" *ngIf="form.controls.tier7_2p.disabled">
         Set from summary information in the log.
       </mat-hint>
-    </div>
-<!--     
+    </div> -->
+<!--
   <div class="slide-toggle">
     <mat-slide-toggle color="primary" formControlName="tier8_4p">Feral Tier 8 4-piece bonus</mat-slide-toggle>
     <p class="mat-hint table-accent">Savage Roar lasts an additional 8 seconds.</p>
   </div> -->
 
-    <h4>Glyphs</h4>
+    <!-- <h4>雕文</h4> -->
     <div class="slide-toggle">
-      <mat-slide-toggle color="primary" formControlName="ripGlyphActive">Glyph of Rip</mat-slide-toggle>
-      <p class="mat-hint table-accent">Increases the duration of Rip by 4 seconds.</p>
-    </div>
-    
-    <div class="slide-toggle">
-      <mat-slide-toggle color="primary" formControlName="shredGlyphActive">Glyph of Shred</mat-slide-toggle>
-      <p class="mat-hint table-accent">Extends the duration of your Rip on the target by 2 seconds for each shred, up to a maximum of 6 sec.</p>
+      <mat-slide-toggle color="primary" formControlName="ripGlyphActive">割裂雕文</mat-slide-toggle>
+      <p class="mat-hint table-accent">增加4秒割裂.</p>
     </div>
 
-    <h4>Auras</h4>
+    <div class="slide-toggle">
+      <mat-slide-toggle color="primary" formControlName="shredGlyphActive">撕碎雕文</mat-slide-toggle>
+      <p class="mat-hint table-accent">每次撕碎增加2秒割裂时间,最多6秒.</p>
+    </div>
+
+    <!-- <h4>Auras</h4>
     <div class="aura-checkboxes">
       <mat-checkbox color="primary" class="aura" formControlName="moonkinAura">Moonkin/Ret Aura</mat-checkbox>
       <p class="mat-hint table-accent" *ngIf="analysis.actorInfo?.initFromLog">Auras set from log.</p>
       <p class="mat-hint table-accent" *ngIf="!analysis.actorInfo?.initFromLog">Data missing from log. Enable to assume haste aura present pre-fight.</p>
-    </div>
+    </div> -->
 
     <div class="slide-toggle">
       <mat-slide-toggle color="primary" formControlName="improvedMoonkinAura">Improved Moonkin Form</mat-slide-toggle>

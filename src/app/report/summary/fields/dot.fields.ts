@@ -31,7 +31,7 @@ export class DotFields extends BaseFields {
   private downtimeStats(stats: CastStats): IStatField[] {
     return[
       this.field({
-        label: 'Avg DoT Downtime',
+        label: '平均断流血时间',
         value: format(stats.dotDowntimeStats.avgDowntime, 1, 's'),
         highlight: this.highlight.dotDowntime(stats)
       })
@@ -47,7 +47,7 @@ export class DotFields extends BaseFields {
 
     return [
       this.field({
-        label: 'Clipped DoTs',
+        label: '提前覆盖损失流血跳数',
         value: clipStr,
         highlight: this.highlight.clippedDots(stats)
       })

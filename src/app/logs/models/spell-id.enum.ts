@@ -35,6 +35,8 @@ export enum SpellId {
   STARFIRE = 48465,
   MOONFIRE = 48463,
   RIP_AND_ROAR = -100,
+  SHRED_AND_FF_AND_OMEN = -200,
+  OMEN = 16870,
 
 
   // Shadow Priest Abilities (Max Rank)

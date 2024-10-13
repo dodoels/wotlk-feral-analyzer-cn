@@ -15,11 +15,11 @@ export class CooldownFields extends BaseFields {
         //   highlight: this.highlight.castLatency(stats)
         // }),
         this.field({
-          label: 'Crit Rate',
+          label: '平均暴击率',
           value: format(stats.critRate * 100, 1, '%')
         }),
         this.field({
-          label: 'Damage/GCD',
+          label: '每GCD平均伤害',
           value: format(stats.damagePerGcd, 0)
         })
       ];

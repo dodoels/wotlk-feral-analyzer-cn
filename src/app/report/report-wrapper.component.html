@@ -11,7 +11,7 @@
 <section class="report">
   <form class="inputs" *ngIf="!!log" [formGroup]="form">
     <mat-form-field appearance="outline">
-      <mat-label>Select Player</mat-label>
+      <mat-label>选择玩家</mat-label>
       <mat-select #selectPlayer formControlName="player">
         <mat-option *ngFor="let option of log?.shadowPriests" [value]="option.id">
           {{option.name}}
@@ -20,7 +20,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Select Encounter</mat-label>
+      <mat-label>选择战斗</mat-label>
       <mat-select #selectEncounter formControlName="encounter">
         <mat-option *ngFor="let option of encounters" [value]="option.id">
           {{option.description}}

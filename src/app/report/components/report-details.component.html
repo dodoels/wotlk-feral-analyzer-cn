@@ -5,9 +5,9 @@
 <section class="content" *ngIf="!loading && !!analysis">
   <form class="target-form" [formGroup]="form">
     <mat-form-field class="fill" appearance="standard">
-      <mat-label>Filter by Target</mat-label>
+      <mat-label>选择敌人</mat-label>
       <mat-select formControlName="target" (selectionChange)="onTargetChange($event)">
-        <mat-option [value]="0">All Targets</mat-option>
+        <mat-option [value]="0">所有敌人</mat-option>
         <mat-option *ngFor="let option of targets" [value]="option.id">
           {{option.name}}
         </mat-option>

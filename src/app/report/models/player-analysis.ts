@@ -103,6 +103,9 @@ export class PlayerAnalysis {
     if(options.spellId == SpellId.RIP_AND_ROAR){
       return this.roarStats(options);
     }
+    if(options.spellId == SpellId.SHRED_AND_FF_AND_OMEN){
+      return this.shredStats(options);
+    }
     let stats = options.spellId === SpellId.NONE ?
       this.report.stats :
       this.report.getSpellStats(options.spellId);
@@ -134,6 +137,22 @@ export class PlayerAnalysis {
     ripRoarStats.merge([ripStats, roarStats]);
 
     return ripRoarStats;
+  }
+
+  private shredStats(options: IStatsSearch): CastStats {
+    const stats = this.stats({
+      hitCount: options.hitCount,
+      spellId: SpellId.SHRED});
+    const ffStats = this.stats({
+      ...options,
+      spellId: SpellId.FAERIE_FIRE_FERAL
+    });
+
+    const shredStats = new CastStats(this.report.analysis);
+    shredStats.merge([ffStats, stats]);
+    console.log(stats)
+
+    return shredStats;
   }
 
   hitCounts(options: IStatsSearch) {

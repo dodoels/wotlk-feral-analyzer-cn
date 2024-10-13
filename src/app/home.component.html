@@ -34,7 +34,7 @@
           </mat-form-field>
 
           <mat-form-field class="fill" appearance="standard">
-            <mat-label>Select Player</mat-label>
+            <mat-label>选择玩家</mat-label>
             <mat-select #selectPlayer formControlName="player">
               <mat-option *ngFor="let option of summary?.shadowPriests" [value]="option.id">
                 {{option.name}}
@@ -58,7 +58,7 @@
       </mat-card-content>
     </mat-card>
     <div class="footer text-subdued">
-      Feral implemented by Korbah-Bloodsail Buccaneers 
+      Feral implemented by Korbah-Bloodsail Buccaneers
       <span class="separator">|</span>
       <a href="https://discord.gg/classicdruid" target="_blank">@Korbah</a>
       <span class="separator">|</span>

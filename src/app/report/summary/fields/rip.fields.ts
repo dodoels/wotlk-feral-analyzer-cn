@@ -10,31 +10,31 @@ export class RipFields extends BaseFields {
     //   stats = new CastStats(this.analysis);
     // }
 
-    const spellLabel = forSummary ? ' Rip' : '';
+    const spellLabel = forSummary ? '割裂' : '';
 
     const uptime = 100 * stats.activeDuration / this.analysis.encounter.duration;
 
     return [
       this.field({
-        label: `Avg${spellLabel} Downtime`,
+        label: `平均${spellLabel}断档时间`,
         value: format(stats.dotDowntimeStats.avgDowntime, 1, 's'),
         highlight: this.highlight.dotDowntime(stats)
       }),
 
       this.field({
-        label: `${spellLabel} Uptime`,
+        label: `${spellLabel}覆盖率`,
         value: format(uptime, 2, '%'),
         highlight: this.highlight.uptime(uptime)
       }),
 
       this.field({
-        label: `Early${spellLabel} Clips`,
+        label: `提前覆盖${spellLabel}`,
         value: this.clipString(stats),
         highlight: this.highlight.clippedEarly(stats)
       }),
 
       this.field({
-        label: `Clipped${spellLabel} ticks`,
+        label: `提前覆盖损失${spellLabel}跳数`,
         value: this.clippedTicksStr(stats),
         highlight: this.highlight.clippedDots(stats)
       }),
