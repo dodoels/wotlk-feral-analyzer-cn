@@ -39,15 +39,28 @@ export class PlayerAnalysis {
   private _applyWrathOfAir: boolean | undefined;
 
   private static _cache: { [key: string]: PlayerAnalysis } = {};
-  public static getCached(logId: string, encounterId: number, playerId: string) {
-    return PlayerAnalysis._cache[PlayerAnalysis.cacheKey(logId, playerId, encounterId)];
+  public static getCached(
+    logId: string,
+    encounterId: number,
+    playerId: string
+  ) {
+    return PlayerAnalysis._cache[
+      PlayerAnalysis.cacheKey(logId, playerId, encounterId)
+    ];
   }
 
   public static cacheKey(logId: string, playerId: string, encounterId: number) {
     return `${logId}:${encounterId}:${playerId}`;
   }
 
-  constructor(log: LogSummary, encounterId: number, playerId: string, actorInfo: CombatantInfo, settings: Settings, events: IEncounterEvents) {
+  constructor(
+    log: LogSummary,
+    encounterId: number,
+    playerId: string,
+    actorInfo: CombatantInfo,
+    settings: Settings,
+    events: IEncounterEvents
+  ) {
     this.log = log;
     this.encounter = log.getEncounter(encounterId) as EncounterSummary;
     this.playerId = playerId;
@@ -65,15 +78,15 @@ export class PlayerAnalysis {
     this.analyze();
   }
 
-  private setTierBonuses(){
+  private setTierBonuses() {
     if (this.actorInfo.gear?.length > 0) {
       const t7_2p = Item.HasTier7bonus2p(this.actorInfo.gear);
-      console.log("Player has 2p tier 7? ", t7_2p);
+      console.log('Player has 2p tier 7? ', t7_2p);
       this.settings.tier7_2p = t7_2p;
     } else {
-      console.log("No gear found");
+      console.log('No gear found');
     }
-    this.tierBonuses = {tier7_2p: this.settings.tier7_2p}
+    this.tierBonuses = { tier7_2p: this.settings.tier7_2p };
   }
 
   refresh(settings: Settings) {
@@ -85,7 +98,7 @@ export class PlayerAnalysis {
   }
 
   get title() {
-    return `${this.actor.name} - ${this.encounter.description}`
+    return `${this.actor.name} - ${this.encounter.description}`;
   }
 
   get targetIds(): number[] {
@@ -101,18 +114,19 @@ export class PlayerAnalysis {
   }
 
   stats(options: IStatsSearch): CastStats {
-    if(options.spellId == SpellId.RIP_AND_ROAR){
+    if (options.spellId == SpellId.RIP_AND_ROAR) {
       return this.roarStats(options);
     }
-    if(options.spellId == SpellId.OOC_WASTE){
+    if (options.spellId == SpellId.OOC_WASTE) {
       return this.wasteStats(options);
     }
-    if(options.spellId == SpellId.AHK){
+    if (options.spellId == SpellId.AHK) {
       return this.ahkStats(options);
     }
-    let stats = options.spellId === SpellId.NONE ?
-      this.report.stats :
-      this.report.getSpellStats(options.spellId);
+    let stats =
+      options.spellId === SpellId.NONE
+        ? this.report.stats
+        : this.report.getSpellStats(options.spellId);
 
     if (options.hitCount >= 0 && Spell.data[options.spellId]?.statsByTick) {
       stats = (stats as SpellStats).statsByHitCount(options.hitCount);
@@ -128,10 +142,11 @@ export class PlayerAnalysis {
   private roarStats(options: IStatsSearch): CastStats {
     const roarStats = this.stats({
       hitCount: options.hitCount,
-      spellId: SpellId.ROAR});
+      spellId: SpellId.ROAR,
+    });
     const ripStats = this.stats({
       ...options,
-      spellId: SpellId.RIP
+      spellId: SpellId.RIP,
     });
 
     // const ripRoarStats = Object.assign({}, ripStats) as CastStats;
@@ -143,71 +158,106 @@ export class PlayerAnalysis {
     return ripRoarStats;
   }
 
-  private ifCastWithOOC(castDetail: CastDetails): boolean {
+  private filteredByOOCProc(castDetail: CastDetails): boolean {
     let check = false;
     castDetail.buffs.forEach((buff) => {
       if (buff.id === 16870) {
         check = true;
       }
-    })
+    });
     return check;
-  };
+  }
 
   private wasteStats(options: IStatsSearch): CastStats {
     const biteStats = this.stats({
       hitCount: options.hitCount,
-      spellId: SpellId.BITE});
+      spellId: SpellId.BITE,
+    });
     const rakeStats = this.stats({
       ...options,
-      spellId: SpellId.RAKE
+      spellId: SpellId.RAKE,
     });
     const ripStats = this.stats({
       ...options,
-      spellId: SpellId.RIP
+      spellId: SpellId.RIP,
     });
 
     const totalStats = new CastStats(this.report.analysis);
     totalStats.merge([rakeStats, biteStats, ripStats]);
-    totalStats._casts = totalStats._casts.filter((cast) => this.ifCastWithOOC(cast));
+    const filteredCasts = totalStats._casts.filter((cast) =>
+      this.filteredByOOCProc(cast)
+    );
 
-    return new CastStats(this.report.analysis, 0, totalStats._casts);
+    return new CastStats(this.report.analysis, 0, filteredCasts);
+  }
+
+  private filteredByShortGCD(castDetails: CastDetails[]): CastDetails[] {
+    if (castDetails.length <= 1) return castDetails;
+    castDetails.sort((a, b) => a.castStart - b.castStart);
+    const set = new Set();
+    const filteredCast: CastDetails[] = [];
+    let i = 0,
+      j = 1;
+    while (j < castDetails.length) {
+      const [left, right] = [castDetails[i], castDetails[j]];
+      if (right.castStart - left.castStart <= 950) {
+        if (!set.has(JSON.stringify(left))) filteredCast.push(left);
+        set.add(JSON.stringify(left));
+        if (!set.has(JSON.stringify(right))) filteredCast.push(right);
+        set.add(JSON.stringify(right));
+      }
+      i++;
+      j++;
+    }
+
+    return filteredCast;
   }
 
   private ahkStats(options: IStatsSearch): CastStats {
     const biteStats = this.stats({
       hitCount: options.hitCount,
-      spellId: SpellId.BITE});
+      spellId: SpellId.BITE,
+    });
     const rakeStats = this.stats({
       ...options,
-      spellId: SpellId.RAKE
+      spellId: SpellId.RAKE,
     });
     const shredStats = this.stats({
       ...options,
-      spellId: SpellId.SHRED
+      spellId: SpellId.SHRED,
     });
     const FFStats = this.stats({
       ...options,
-      spellId: SpellId.FAERIE_FIRE_FERAL
+      spellId: SpellId.FAERIE_FIRE_FERAL,
     });
     const ripAndRoar = this.stats({
       ...options,
-      spellId: SpellId.RIP_AND_ROAR
+      spellId: SpellId.RIP_AND_ROAR,
     });
     const mangle = this.stats({
       ...options,
-      spellId: SpellId.MANGLE_CAT
+      spellId: SpellId.MANGLE_CAT,
     });
 
     const totalStats = new CastStats(this.report.analysis);
-    totalStats.merge([rakeStats, biteStats, shredStats, FFStats, ripAndRoar, mangle]);
+    totalStats.merge([
+      rakeStats,
+      biteStats,
+      shredStats,
+      FFStats,
+      ripAndRoar,
+      mangle,
+    ]);
+    const filteredCasts = this.filteredByShortGCD(totalStats._casts);
 
-    return new CastStats(this.report.analysis, 0, totalStats._casts);
+    return new CastStats(this.report.analysis, 0, filteredCasts);
   }
 
   hitCounts(options: IStatsSearch) {
-    let stats = options.spellId === SpellId.NONE ?
-      this.report.stats :
-      this.report.getSpellStats(options.spellId);
+    let stats =
+      options.spellId === SpellId.NONE
+        ? this.report.stats
+        : this.report.getSpellStats(options.spellId);
 
     if (options.targetId) {
       stats = stats.targetStats(options.targetId);
@@ -226,7 +276,9 @@ export class PlayerAnalysis {
       this._applyWrathOfAir = false;
     } else {
       const shamans = this.log.actors.filter((a) => {
-        return a.type === 'Shaman' && a.encounterIds.includes(this.encounter.id)
+        return (
+          a.type === 'Shaman' && a.encounterIds.includes(this.encounter.id)
+        );
       });
 
       this._applyWrathOfAir = shamans.length > 0;
@@ -242,14 +294,17 @@ export class PlayerAnalysis {
     this.events = new EventPreprocessor(this, this._rawEvents).run();
 
     // apply haste rating from settings if missing from log
-    if (this.actorInfo.stats?.hasteRating === undefined && this.settings.hasteRating) {
+    if (
+      this.actorInfo.stats?.hasteRating === undefined &&
+      this.settings.hasteRating
+    ) {
       this.actorInfo.stats = ActorStats.inferred(this.settings.hasteRating);
     }
 
     // analyze events and generate casts report
     const eventAnalyzer = new EventAnalyzer(this);
     const casts = eventAnalyzer.createCasts();
-    eventAnalyzer.showUnreadEvents();
+    // eventAnalyzer.showUnreadEvents();
     this.report = new CastsAnalyzer(this, casts).run();
 
     const roarAnalyzer = new RoarAnalyzer(this, casts);
@@ -262,7 +317,9 @@ export class PlayerAnalysis {
     this.totalGcds = new GcdAnalyzer(this).totalGcds;
 
     // Cache result
-    PlayerAnalysis._cache[PlayerAnalysis.cacheKey(this.log.id, this.playerId, this.encounter.id)] = this;
+    PlayerAnalysis._cache[
+      PlayerAnalysis.cacheKey(this.log.id, this.playerId, this.encounter.id)
+    ] = this;
   }
 }
 

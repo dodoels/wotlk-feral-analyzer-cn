@@ -5,7 +5,7 @@ import { RipSummary } from 'src/app/report/summary/rip-summary';
 import { SavageRoarSummary } from '../summary/savage-roar.summary';
 import { ShredSummary } from '../summary/shred-summary';
 import { BiteSummary } from '../summary/bite-summary';
-import { OOCWasteSummary } from '../summary/ooc-waste-summary';
+import { OtherSummary } from '../summary/other-summary';
 
 export enum Tab {
   Timeline = 0,
@@ -60,13 +60,7 @@ export const TabDefinitions: ITabDefinition[] = [
     summaryType: RipSummary
   },
 
-  {
-    label: '清晰损失',
-    // icon: 'savage-roar',
-    icon: 'omen',
-    spellId: SpellId.OOC_WASTE,
-    summaryType: OOCWasteSummary
-  },
+
 
   {
     label: '撕咬收益',
@@ -77,11 +71,19 @@ export const TabDefinitions: ITabDefinition[] = [
   },
 
   {
+    label: '清晰损失',
+    // icon: 'savage-roar',
+    icon: 'omen',
+    spellId: SpellId.OOC_WASTE,
+    summaryType: OtherSummary
+  },
+
+  {
     label: '异常检测',
     // icon: 'savage-roar',
     icon: 'pig',
     spellId: SpellId.AHK,
-    summaryType: TimelineSummary
+    summaryType: OtherSummary
   },
 ];
 

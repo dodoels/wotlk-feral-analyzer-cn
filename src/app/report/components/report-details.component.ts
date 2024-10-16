@@ -264,9 +264,9 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
 
     const showHasteError = (hasteRating === undefined || (castCount > 10 && Math.abs(hasteError) > .03));
 
-    if (showHasteError || inferTier7 != undefined) {
-      this.openSnackbar(showHasteError, hasteRating === undefined ? undefined : hasteError, inferTier7);
-    }
+    // if (showHasteError || inferTier7 != undefined) {
+    //   this.openSnackbar(showHasteError, hasteRating === undefined ? undefined : hasteError, inferTier7);
+    // }
   }
 
   private openSnackbar(showHasteError: boolean, hasteError?: number, inferTier7?: boolean) {
