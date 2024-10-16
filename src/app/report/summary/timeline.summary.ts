@@ -19,7 +19,6 @@ export class TimelineSummary extends BaseSummary {
   private summaryFields: SummaryFields;
   private dotFields: DotFields;
   private cooldownFields: CooldownFields;
-  private channelFields: ChannelFields;
   private ripFields: RipFields;
   private fffFields: FeralFaerieFireFields;
   private roarFields: RoarFields;
@@ -31,7 +30,6 @@ export class TimelineSummary extends BaseSummary {
     this.summaryFields = new SummaryFields(this.analysis, this.highlight);
     this.dotFields = new DotFields(this.analysis, this.highlight);
     this.cooldownFields = new CooldownFields(this.analysis, this.highlight);
-    this.channelFields = new ChannelFields(this.analysis, this.highlight);
     this.ripFields = new RipFields(this.analysis, this.highlight);
     this.fffFields = new FeralFaerieFireFields(this.analysis, this.highlight);
     this.roarFields = new RoarFields(this.analysis, this.highlight);
@@ -39,12 +37,7 @@ export class TimelineSummary extends BaseSummary {
   }
 
   report(stats: CastStats) {
-    // let mindFlayStats: CastStats = this.analysis.report.getSpellStats(SpellId.MIND_FLAY);
     let ripStats: CastStats = this.analysis.report.getSpellStats(SpellId.RIP);
-
-    // if (stats.targetId) {
-    //   mindFlayStats = mindFlayStats.targetStats(stats.targetId);
-    // }
 
     return this.summaryFields.fields(stats)
       .concat(this.dotFields.fields(stats))

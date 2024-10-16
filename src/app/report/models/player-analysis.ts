@@ -18,6 +18,7 @@ import { Item } from 'src/app/logs/models/item-data';
 import { TierBonuses } from 'src/app/logs/interfaces';
 import { RoarAnalyzer } from '../analysis/savage-roar-analyzer';
 import { FeralFaerieFireAnalyzer } from '../analysis/feral-faerie-fire-analyzer';
+import { CastDetails } from './cast-details';
 
 export class PlayerAnalysis {
   public log: LogSummary;
@@ -103,8 +104,11 @@ export class PlayerAnalysis {
     if(options.spellId == SpellId.RIP_AND_ROAR){
       return this.roarStats(options);
     }
-    if(options.spellId == SpellId.SHRED_AND_FF_AND_OMEN){
-      return this.shredStats(options);
+    if(options.spellId == SpellId.OOC_WASTE){
+      return this.wasteStats(options);
+    }
+    if(options.spellId == SpellId.AHK){
+      return this.ahkStats(options);
     }
     let stats = options.spellId === SpellId.NONE ?
       this.report.stats :
@@ -139,20 +143,65 @@ export class PlayerAnalysis {
     return ripRoarStats;
   }
 
-  private shredStats(options: IStatsSearch): CastStats {
-    const stats = this.stats({
+  private ifCastWithOOC(castDetail: CastDetails): boolean {
+    let check = false;
+    castDetail.buffs.forEach((buff) => {
+      if (buff.id === 16870) {
+        check = true;
+      }
+    })
+    return check;
+  };
+
+  private wasteStats(options: IStatsSearch): CastStats {
+    const biteStats = this.stats({
       hitCount: options.hitCount,
-      spellId: SpellId.SHRED});
-    const ffStats = this.stats({
+      spellId: SpellId.BITE});
+    const rakeStats = this.stats({
+      ...options,
+      spellId: SpellId.RAKE
+    });
+    const ripStats = this.stats({
+      ...options,
+      spellId: SpellId.RIP
+    });
+
+    const totalStats = new CastStats(this.report.analysis);
+    totalStats.merge([rakeStats, biteStats, ripStats]);
+    totalStats._casts = totalStats._casts.filter((cast) => this.ifCastWithOOC(cast));
+
+    return new CastStats(this.report.analysis, 0, totalStats._casts);
+  }
+
+  private ahkStats(options: IStatsSearch): CastStats {
+    const biteStats = this.stats({
+      hitCount: options.hitCount,
+      spellId: SpellId.BITE});
+    const rakeStats = this.stats({
+      ...options,
+      spellId: SpellId.RAKE
+    });
+    const shredStats = this.stats({
+      ...options,
+      spellId: SpellId.SHRED
+    });
+    const FFStats = this.stats({
       ...options,
       spellId: SpellId.FAERIE_FIRE_FERAL
     });
+    const ripAndRoar = this.stats({
+      ...options,
+      spellId: SpellId.RIP_AND_ROAR
+    });
+    const mangle = this.stats({
+      ...options,
+      spellId: SpellId.MANGLE_CAT
+    });
 
-    const shredStats = new CastStats(this.report.analysis);
-    shredStats.merge([ffStats, stats]);
-    console.log(stats)
+    const totalStats = new CastStats(this.report.analysis);
+    totalStats.merge([rakeStats, biteStats, shredStats, FFStats, ripAndRoar, mangle]);
 
-    return shredStats;
+    return new CastStats(this.report.analysis, 0, totalStats._casts);
   }
 
   hitCounts(options: IStatsSearch) {

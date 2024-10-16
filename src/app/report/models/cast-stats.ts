@@ -26,8 +26,8 @@ export class CastStats {
   protected _avgHasteError = 0;
   protected _hasteErrorCastCount = 0;
 
-  private _casts: CastDetails[] = [];
-  private _sortedCasts?: CastDetails[];
+  public _casts: CastDetails[] = [];
+  public _sortedCasts?: CastDetails[];
   private _activeDuration = 0;
   private _targetIds: Set<number> = new Set();
   private _hitCounts: Set<number> = new Set();

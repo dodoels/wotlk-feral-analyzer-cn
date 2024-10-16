@@ -1,16 +1,18 @@
-@use 'node_modules/@angular/material/index' as mat;
+@use "node_modules/@angular/material/index" as mat;
 
 @include mat.core();
 
 $primary: mat.define-palette(mat.$indigo-palette, 200);
 $accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
 
-$theme: mat.define-dark-theme((
-  color: (
-    primary: $primary,
-    accent: $accent,
+$theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+    ),
   )
-));
+);
 
 @include mat.button-theme($theme);
 @include mat.button-toggle-theme($theme);
@@ -29,14 +31,21 @@ $theme: mat.define-dark-theme((
 @include mat.tabs-theme($theme);
 @include mat.toolbar-theme($theme);
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
+html {
+  background-image: url("/feral/assets/background.png");
+  background-repeat: repeat;
+  background-size: 20%;
+}
+
 body {
-  background-color: mat.get-color-from-palette(mat.$dark-theme-background-palette, 'background');
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  width: auto;
 }
 
 h1 {
@@ -55,7 +64,10 @@ h4 {
 }
 
 .tooltip {
-  background-color: mat.get-color-from-palette(mat.$dark-theme-background-palette, 'background');
+  background-color: mat.get-color-from-palette(
+    mat.$dark-theme-background-palette,
+    "background"
+  );
   padding: 4px 8px;
   font-size: 0.8em;
 }
@@ -70,34 +82,54 @@ form mat-form-field {
   justify-content: space-between;
 }
 
-.mat-content > mat-panel-title, .mat-content > mat-panel-description {
+.mat-content > mat-panel-title,
+.mat-content > mat-panel-description {
   flex: 0 0 auto;
 }
 
 .mat-button-toggle > button {
-  background-color: mat.get-color-from-palette(mat.$dark-theme-background-palette, 'raised-button');
+  background-color: mat.get-color-from-palette(
+    mat.$dark-theme-background-palette,
+    "raised-button"
+  );
 }
 
 .mat-button-toggle:hover > button {
-  background-color: mat.get-color-from-palette(mat.$dark-theme-background-palette, 'focused-button');
+  background-color: mat.get-color-from-palette(
+    mat.$dark-theme-background-palette,
+    "focused-button"
+  );
 }
 
 .mat-button-toggle-checked > button,
 .mat-button-toggle-checked:hover > button {
-  background-color: mat.get-color-from-palette(mat.$dark-theme-background-palette, 'selected-button');
+  background-color: mat.get-color-from-palette(
+    mat.$dark-theme-background-palette,
+    "selected-button"
+  );
   color: mat.get-color-from-palette(mat.$indigo-palette, 200);
 }
 
 .logo {
-  display: inline-block;
-  height: 56px;
-  width: 56px;
-  border-radius: 2px;
-  background: no-repeat url('/feral/assets/cat_form.jpg');
+  img {
+    display: inline-block;
+    height: 56px;
+    width: 56px;
+    border-radius: 2px;
+  }
+}
+
+.sponser {
+  display: flex;
+		align-items: center;
+		white-space: nowrap;
 }
 
 .app-bar {
-  background-color: mat.get-color-from-palette(mat.$dark-theme-background-palette, 'app-bar');
+  background-color: mat.get-color-from-palette(
+    mat.$dark-theme-background-palette,
+    "app-bar"
+  );
 }
 
 .text-primary {
@@ -105,6 +137,7 @@ form mat-form-field {
 }
 
 .text-subdued {
+  margin: 5px;
   color: #999;
 }
 
@@ -141,16 +174,19 @@ a {
 }
 
 .snackbar {
-  background-color: mat.get-color-from-palette(mat.$dark-theme-background-palette, 'app-bar');
+  background-color: mat.get-color-from-palette(
+    mat.$dark-theme-background-palette,
+    "app-bar"
+  );
   color: mat.get-color-from-palette(mat.$indigo-palette, 100);
 }
 
 //
 // Mobile styles
 //
-@import 'src/styles/mobile';
+@import "src/styles/mobile";
 
 //
 // Spell icons
 //
-@import 'src/styles/icons';
+@import "src/styles/icons";

@@ -4,6 +4,8 @@ import { BaseSummary } from 'src/app/report/summary/base.summary';
 import { RipSummary } from 'src/app/report/summary/rip-summary';
 import { SavageRoarSummary } from '../summary/savage-roar.summary';
 import { ShredSummary } from '../summary/shred-summary';
+import { BiteSummary } from '../summary/bite-summary';
+import { OOCWasteSummary } from '../summary/ooc-waste-summary';
 
 export enum Tab {
   Timeline = 0,
@@ -27,7 +29,7 @@ export const TabDefinitions: ITabDefinition[] = [
 
   // Tab.Rip
   {
-    label: '割裂',
+    label: '割裂覆盖',
     icon: 'rip',
     spellId: SpellId.RIP,
     summaryType: RipSummary
@@ -46,41 +48,41 @@ export const TabDefinitions: ITabDefinition[] = [
     label: '撕碎质量',
     // icon: 'savage-roar',
     icon: 'shred',
-    spellId: SpellId.SHRED_AND_FF_AND_OMEN,
+    spellId: SpellId.SHRED,
     summaryType: ShredSummary
   },
 
-  // {
-  //   label: '清晰损失',
-  //   // icon: 'savage-roar',
-  //   icon: 'omen',
-  //   spellId: SpellId.OMEN,
-  //   summaryType: SavageRoarSummary
-  // },
+  {
+    label: '斜掠覆盖',
+    // icon: 'savage-roar',
+    icon: 'rake',
+    spellId: SpellId.RAKE,
+    summaryType: RipSummary
+  },
 
-  // {
-  //   label: '斜掠覆盖',
-  //   // icon: 'savage-roar',
-  //   icon: 'rake',
-  //   spellId: SpellId.RAKE,
-  //   summaryType: SavageRoarSummary
-  // },
+  {
+    label: '清晰损失',
+    // icon: 'savage-roar',
+    icon: 'omen',
+    spellId: SpellId.OOC_WASTE,
+    summaryType: OOCWasteSummary
+  },
 
-  // {
-  //   label: '撕咬收益',
-  //   // icon: 'savage-roar',
-  //   icon: 'ferocious-bite',
-  //   spellId: SpellId.BITE,
-  //   summaryType: SavageRoarSummary
-  // },
+  {
+    label: '撕咬收益',
+    // icon: 'savage-roar',
+    icon: 'ferocious-bite',
+    spellId: SpellId.BITE,
+    summaryType: BiteSummary
+  },
 
-  // {
-  //   label: 'AHK检测',
-  //   // icon: 'savage-roar',
-  //   icon: 'pig',
-  //   spellId: SpellId.RIP_AND_ROAR,
-  //   summaryType: SavageRoarSummary
-  // },
+  {
+    label: '异常检测',
+    // icon: 'savage-roar',
+    icon: 'pig',
+    spellId: SpellId.AHK,
+    summaryType: TimelineSummary
+  },
 ];
 
 export interface ITabDefinition {

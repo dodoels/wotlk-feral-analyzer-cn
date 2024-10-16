@@ -1,11 +1,15 @@
 <nav class="app-bar" *ngIf="!!log">
   <a [routerLink]="['/']"><span class="logo"></span></a>
-  <span class="title text-primary">
-    {{ log.title }} ({{ log.owner }})
-  </span>
+  <span class="title text-primary"> {{ log.owner }} - {{ log.title }} </span>
   <span class="link">
-    <a [href]="log.url" target="_blank" class="text-subdued" title="view on WCL"><mat-icon>article</mat-icon></a>
+    <a [href]="log.url" target="_blank" class="text-subdued" title="view on WCL"
+      ><mat-icon>article</mat-icon></a
+    >
   </span>
+  <a href="https://space.bilibili.com/919498"  target="_blank" class="sponsership">
+    <span>支持开发者</span>
+    <img src="/feral/assets/icon.jpg" />
+  </a>
 </nav>
 
 <section class="report">
@@ -13,8 +17,11 @@
     <mat-form-field appearance="outline">
       <mat-label>选择玩家</mat-label>
       <mat-select #selectPlayer formControlName="player">
-        <mat-option *ngFor="let option of log?.shadowPriests" [value]="option.id">
-          {{option.name}}
+        <mat-option
+          *ngFor="let option of log?.shadowPriests"
+          [value]="option.id"
+        >
+          {{ option.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -23,7 +30,7 @@
       <mat-label>选择战斗</mat-label>
       <mat-select #selectEncounter formControlName="encounter">
         <mat-option *ngFor="let option of encounters" [value]="option.id">
-          {{option.description}}
+          {{ option.description }}
         </mat-option>
       </mat-select>
     </mat-form-field>

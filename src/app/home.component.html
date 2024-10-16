@@ -1,74 +1,114 @@
 <div class="home">
   <div class="content">
     <div class="header">
-      <div class="logo"></div>
-      <h1 class="text-primary">Wrath Feral (Cat) Druid Analyzer</h1>
+      <div class="logo">
+        <a href="https://space.bilibili.com/919498" target="_blank"
+          ><img src="/feral/assets/icon.jpg"
+        /></a>
+      </div>
+      <h1 class="text-primary">WLK猫德循环分析助手 by 财高八抖</h1>
     </div>
-
+    <div class="footer text-subdued">
+      Korbah-Bloodsail授权,源自KalonxD-Pagle暗牧分析助手
+    </div>
     <mat-card>
       <mat-card-content>
         <form class="report-form" [formGroup]="form">
           <mat-form-field class="fill" appearance="standard">
-            <mat-label>Enter WCL report ID or URL</mat-label>
-            <input type="text"
-                   formControlName="log"
-                   placeholder="e.g. https://classic.warcraftlogs.com/reports/WLkZ1TmdcJD76Aty"
-                   value=""
-                   (keydown.enter)="loadReport()"
-                   matInput />
+            <mat-label>输入WCL地址后点击确定</mat-label>
+            <input
+              type="text"
+              formControlName="log"
+              placeholder="e.g. https://classic.warcraftlogs.com/reports/WLkZ1TmdcJD76Aty"
+              value=""
+              (keydown.enter)="loadReport()"
+              matInput
+            />
             <mat-error *ngIf="log?.hasError('invalid')">
-              Enter a valid WCL report ID or URL
+              请输入一个有效的WCL链接
             </mat-error>
             <mat-error *ngIf="log?.hasError('wcl')">
-              {{log?.getError('wcl')}}
+              {{ log?.getError("wcl") }}
             </mat-error>
-            <button *ngIf="log?.dirty && log?.valid && !searching"
-                    aria-label="Load Report"
-                    color="primary"
-                    (click)="loadReport()"
-                    matSuffix mat-icon-button>
+            <button
+              *ngIf="log?.dirty && log?.valid && !searching"
+              aria-label="Load Report"
+              color="primary"
+              (click)="loadReport()"
+              matSuffix
+              mat-icon-button
+            >
               <mat-icon>search</mat-icon>
             </button>
-            <mat-spinner *ngIf="searching" matSuffix color="accent" diameter="16"></mat-spinner>
-            <mat-icon *ngIf="log?.pristine && summary" matSuffix color="primary">done</mat-icon>
+            <mat-spinner
+              *ngIf="searching"
+              matSuffix
+              color="accent"
+              diameter="16"
+            ></mat-spinner>
+            <mat-icon *ngIf="log?.pristine && summary" matSuffix color="primary"
+              >done</mat-icon
+            >
           </mat-form-field>
 
           <mat-form-field class="fill" appearance="standard">
             <mat-label>选择玩家</mat-label>
             <mat-select #selectPlayer formControlName="player">
-              <mat-option *ngFor="let option of summary?.shadowPriests" [value]="option.id">
-                {{option.name}}
+              <mat-option
+                *ngFor="let option of summary?.shadowPriests"
+                [value]="option.id"
+              >
+                {{ option.name }}
               </mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-form-field class="fill" appearance="standard">
-            <mat-label>Select Encounter</mat-label>
+            <mat-label>选择战斗</mat-label>
             <mat-select #selectEncounter formControlName="encounter">
               <mat-option *ngFor="let option of encounters" [value]="option.id">
-                {{option.description}}
+                {{ option.description }}
               </mat-option>
             </mat-select>
           </mat-form-field>
 
           <div style="text-align: center">
-            <button mat-flat-button color="primary" [disabled]="!formComplete" (click)="analyze($event)">Analyze</button>
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="!formComplete"
+              (click)="analyze($event)"
+            >
+              开始分析
+            </button>
           </div>
         </form>
       </mat-card-content>
     </mat-card>
     <div class="footer text-subdued">
-      Feral implemented by Korbah-Bloodsail Buccaneers
-      <span class="separator">|</span>
+      <!-- <span class="separator">|</span>
       <a href="https://discord.gg/classicdruid" target="_blank">@Korbah</a>
       <span class="separator">|</span>
       <span><a href="https://github.com/korbrawr/feral/blob/main/GLOSSARY.md" target="_blank">Glossary of Terms</a></span>
       <span class="separator">|</span>
       <span><a href="https://github.com/korbrawr/feral" target="_blank">Source</a></span>
-    </div>
-    <div class="footer text-subdued">
-      (The Feral Analyzer is a fork of KalonxD-Pagle's Shadow Priest Analyzer)
+    </div> -->
+      <div class="sponser">
+        <a
+          href="https://space.bilibili.com/919498"
+          target="_blank"
+          class="nav-link link-alt"
+        >
+          <img
+            style="width: 100px"
+            src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/a5cd6011-7e4a-4e59-95cf-5ba100d5af15/dcwdpvh-616272f0-7727-43df-9af9-4575d61777fd.png/v1/fit/w_414,h_293/bilibililogo_png_by_marshallmclee_dcwdpvh-414w.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTA1IiwicGF0aCI6IlwvZlwvYTVjZDYwMTEtN2U0YS00ZTU5LTk1Y2YtNWJhMTAwZDVhZjE1XC9kY3dkcHZoLTYxNjI3MmYwLTc3MjctNDNkZi05YWY5LTQ1NzVkNjE3NzdmZC5wbmciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.48ZUY2UKbRci8j3K-1z9DaAL_5hicgyuqyofbRvrMw8"
+          />
+        </a>
+        <span class="fs-4 d-md-none d-lg-block"
+          >通过新手盒子或者B站订阅/充电支持开发者!怀旧服国服野德社区感谢你的支持!
+        </span>
+      </div>
+      <div class="footer text-subdued"></div>
     </div>
   </div>
 </div>
-
