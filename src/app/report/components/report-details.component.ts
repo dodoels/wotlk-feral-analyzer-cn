@@ -6,6 +6,8 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { switchMap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
+import mixpanel from 'mixpanel-browser';
+
 
 import { LogsService } from 'src/app/logs/logs.service';
 import { IStatsSearch, PlayerAnalysis } from 'src/app/report/models/player-analysis';
@@ -20,6 +22,8 @@ import { CastDetails } from 'src/app/report/models/cast-details';
 import { SettingsService } from 'src/app/settings.service';
 import { SettingsHintComponent } from 'src/app/report/components/settings-hint.component';
 import { Spell } from 'src/app/logs/models/spell-data';
+
+mixpanel.init('3efade5c713ec1f6a5bdf17edd040ca2', {debug: true, track_pageview: true, persistence: 'localStorage'});
 
 @Component({
   selector: 'report-details',
@@ -223,6 +227,8 @@ export class ReportDetailsComponent implements OnInit, OnDestroy {
     const tab = this.tabs[this.activeTab];
     const options = this.statOptions(tab.spellId);
     const stats = this.analysis.stats(options);
+
+    mixpanel.track(tab.label);
 
     tab.casts = stats?.casts || [];
     tab.stats = stats ? tab.summary.report(stats) : [];
